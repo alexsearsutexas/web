@@ -5,13 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "2962819464",
+    "hash" : "0",
     "id" : "E7EEB611",
-    "lastKnownWriteTime" : 1588798458,
-    "last_content_update" : 1588798458,
+    "lastKnownWriteTime" : 1588805942,
+    "last_content_update" : 1588805942920,
     "path" : "~/Desktop/web/content/project1-1.Rmd",
     "project_path" : "content/project1-1.Rmd",
     "properties" : {
+        "cursorPosition" : "12,3",
+        "scrollLine" : "0"
     },
     "read_only" : false,
     "read_only_alternatives" : [

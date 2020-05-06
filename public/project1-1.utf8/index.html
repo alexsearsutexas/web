@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Alexandra Sears" />
+    <meta name="description" content="Describe your website">
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
+    <title>Project 1: Exploratory Data Analysis</title>
+    <meta name="generator" content="Hugo 0.70.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,200bold,400old" />
+    
+    <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+    
+  </head>
+
+  <body>
+    <div id="wrap">
+
+      
+      <nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/"><i class="fa fa-home"></i></a>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+        <li><a href="/blog/">BLOG</a></li>
+        
+        <li><a href="/projects/">PROJECTS</a></li>
+        
+        <li><a href="/resume/">RESUME</a></li>
+        
+      
+      </ul>
+    </div>
+  </div>
+</nav>
+
+      
+      <div class="container">
+        <div class="blog-post">
+          <h3>
+            <strong><a href="/project1-1.utf8/">Project 1: Exploratory Data Analysis</a></strong>
+          </h3>
+        </div>
+        <div class="blog-title">
+          <h4>
+          March 15, 2020
+            &nbsp;&nbsp;
+            
+          </h4>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="blogpost">
+              <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">exercise2015<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">read_csv</span>(<span style="color:#e6db74">&#34;week16_exercise.csv&#34;</span>)
+crime2015<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">read_csv</span>(<span style="color:#e6db74">&#34;table5.csv&#34;</span>)
+<span style="color:#75715e">#data sets</span>
+<span style="color:#a6e22e">library</span>(ggplot2)
+crime2015 <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">na.omit</span>(crime2015) 
+<span style="color:#a6e22e">glimpse</span>(crime2015)
+</code></pre></div><pre><code>## Rows: 52
+## Columns: 12
+## $ State               &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;, &quot;Arkansas&quot;, &quot;Cali…
+## $ Population          &lt;dbl&gt; 4858979, 738432, 6828065, 2978204, 39144818, 5456…
+## $ Violent_crime       &lt;dbl&gt; 22952, 5392, 28012, 15526, 166883, 17515, 7845, 4…
+## $ Murder_manslaughter &lt;dbl&gt; 348, 59, 309, 181, 1861, 176, 117, 63, 162, 1041,…
+## $ Rape_revdef         &lt;dbl&gt; 2039, 901, 3108, 1931, 12811, 3257, 773, 341, 494…
+## $ Rape_legdef         &lt;dbl&gt; 1456, 650, 2294, 1300, 9387, 2377, 582, 243, 366,…
+## $ Robbery             &lt;dbl&gt; 4611, 761, 6360, 2098, 52862, 3323, 2892, 1235, 3…
+## $ Aggravated_assault  &lt;dbl&gt; 15954, 3671, 18235, 11316, 99349, 10759, 4063, 30…
+## $ Property_crime      &lt;dbl&gt; 144746, 20806, 207107, 96836, 1024914, 144136, 65…
+## $ Burglary            &lt;dbl&gt; 35255, 3511, 37957, 22640, 197404, 23454, 10053, …
+## $ Larceny_theft       &lt;dbl&gt; 99156, 15249, 152365, 68424, 656517, 104682, 4867…
+## $ Car_theft           &lt;dbl&gt; 10335, 2046, 16785, 5772, 170993, 16000, 6338, 11…
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">exercise2015<span style="color:#f92672">&lt;-</span> exercise2015
+<span style="color:#a6e22e">glimpse</span>(exercise2015)
+</code></pre></div><pre><code>## Rows: 52
+## Columns: 9
+## $ count            &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1…
+## $ state            &lt;chr&gt; &quot;All states (average)&quot;, &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizon…
+## $ adults           &lt;dbl&gt; 22, 19, 27, 26, 15, 24, 32, 24, 20, 30, 21, 20, 24, …
+## $ men              &lt;dbl&gt; 27, 24, 33, 29, 19, 28, 33, 28, 24, 40, 27, 27, 31, …
+## $ women            &lt;dbl&gt; 18, 14, 23, 23, 11, 19, 31, 21, 15, 22, 15, 14, 18, …
+## $ men_working      &lt;dbl&gt; 28, 25, 31, 31, 21, 29, 34, 29, 23, 40, 27, 29, 32, …
+## $ women_working    &lt;dbl&gt; 20, 15, 24, 26, 13, 21, 33, 24, 17, 24, 17, 15, 19, …
+## $ men_nonworking   &lt;dbl&gt; 21, 23, 33, 22, 14, 24, 26, 22, 25, 43, 25, 21, 25, …
+## $ women_nonworking &lt;dbl&gt; 14, 13, 17, 16, 9, 15, 27, 13, 11, 18, 12, 12, 14, 2…
+</code></pre><h4 id="introduction">Introduction</h4>
+<p>*I got one data set from the FBI website on violent crimes by state, <a href="https://ucr.fbi.gov/crime-in-the-u.s/2015/crime-in-the-u.s.-2015/tables/table-5">https://ucr.fbi.gov/crime-in-the-u.s/2015/crime-in-the-u.s.-2015/tables/table-5</a>. It contains population per state and total violent crimes, but also splits violent crimes into murder, rape, robbery, etc. I got the other from <a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2018/2018-07-17/week16_exercise.xlsx,">https://github.com/rfordatascience/tidytuesday/blob/master/data/2018/2018-07-17/week16_exercise.xlsx,</a> which is originally from the National Health Statistics Reports by the CDC. This data set has the percentage of adults 18-64 that exercise the recommended daily amount. It has this split into male and female and employed and unemployed. I chose the first data set because I did my biostatistics project on poulation and crime and I wanted to further explore that. I chose the second data set because I know that exercise releases chemicals that improve your mood and I wanted to know if states that had more people exercising had less crime. I am connecting the data sets by state. I collected data from crime in 2015 because that is the year the exercise data was from and I named the FBI crime one crime2015 and the CDC exercise one exercise 2015. I expect to see that states with higher individuals that work out will have less violent crimes. I also expect the states with more active unemployed adults may also have less robbery and burglaries assuming most robberies are done by people without steady income. *</p>
+<h4 id="joiningmerging">Joining/Merging</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">crime2015<span style="color:#f92672">&lt;-</span>crime2015<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">rename</span>(state<span style="color:#f92672">=</span>State)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">mutate</span>(state<span style="color:#f92672">=</span><span style="color:#a6e22e">recode</span>(state,<span style="color:#e6db74">&#34;West Virgina&#34;</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;West Virginia&#34;</span>))
+both<span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">inner_join</span>(crime2015, exercise2015, by<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;state&#34;</span>)
+both<span style="color:#f92672">&lt;-</span>both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">select</span>(<span style="color:#f92672">-</span>count)
+<span style="color:#a6e22e">glimpse</span>(both)
+</code></pre></div><pre><code>## Rows: 50
+## Columns: 19
+## $ state               &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;, &quot;Arkansas&quot;, &quot;Cali…
+## $ Population          &lt;dbl&gt; 4858979, 738432, 6828065, 2978204, 39144818, 5456…
+## $ Violent_crime       &lt;dbl&gt; 22952, 5392, 28012, 15526, 166883, 17515, 7845, 4…
+## $ Murder_manslaughter &lt;dbl&gt; 348, 59, 309, 181, 1861, 176, 117, 63, 162, 1041,…
+## $ Rape_revdef         &lt;dbl&gt; 2039, 901, 3108, 1931, 12811, 3257, 773, 341, 494…
+## $ Rape_legdef         &lt;dbl&gt; 1456, 650, 2294, 1300, 9387, 2377, 582, 243, 366,…
+## $ Robbery             &lt;dbl&gt; 4611, 761, 6360, 2098, 52862, 3323, 2892, 1235, 3…
+## $ Aggravated_assault  &lt;dbl&gt; 15954, 3671, 18235, 11316, 99349, 10759, 4063, 30…
+## $ Property_crime      &lt;dbl&gt; 144746, 20806, 207107, 96836, 1024914, 144136, 65…
+## $ Burglary            &lt;dbl&gt; 35255, 3511, 37957, 22640, 197404, 23454, 10053, …
+## $ Larceny_theft       &lt;dbl&gt; 99156, 15249, 152365, 68424, 656517, 104682, 4867…
+## $ Car_theft           &lt;dbl&gt; 10335, 2046, 16785, 5772, 170993, 16000, 6338, 11…
+## $ adults              &lt;dbl&gt; 19, 27, 26, 15, 24, 32, 24, 20, 30, 21, 20, 24, 3…
+## $ men                 &lt;dbl&gt; 24, 33, 29, 19, 28, 33, 28, 24, 40, 27, 27, 31, 3…
+## $ women               &lt;dbl&gt; 14, 23, 23, 11, 19, 31, 21, 15, 22, 15, 14, 18, 2…
+## $ men_working         &lt;dbl&gt; 25, 31, 31, 21, 29, 34, 29, 23, 40, 27, 29, 32, 3…
+## $ women_working       &lt;dbl&gt; 15, 24, 26, 13, 21, 33, 24, 17, 24, 17, 15, 19, 2…
+## $ men_nonworking      &lt;dbl&gt; 23, 33, 22, 14, 24, 26, 22, 25, 43, 25, 21, 25, 3…
+## $ women_nonworking    &lt;dbl&gt; 13, 17, 16, 9, 15, 27, 13, 11, 18, 12, 12, 14, 28…
+</code></pre><p><em>I had to rename State to state match the case in exercise2015 and I had to fix the spelling mistake in West Virginia. I chose innerjoin because crime2015 included Puerto Rico and exercise2015 had a total of the country and crime2015 did not have crime totals. I was not interested in the nation total so this was not a problem.</em></p>
+<h4 id="wrangling">Wrangling</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">library</span>(knitr)
+<span style="color:#a6e22e">library</span>(kableExtra)
+
+both <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">filter</span>(Population<span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">6000000</span>)
+</code></pre></div><pre><code>## # A tibble: 18 x 19
+##    state Population Violent_crime Murder_manslaug… Rape_revdef Rape_legdef
+##    &lt;chr&gt;      &lt;dbl&gt;         &lt;dbl&gt;            &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+##  1 Ariz…    6828065         28012              309        3108        2294
+##  2 Cali…   39144818        166883             1861       12811        9387
+##  3 Flor…   20271272         93626             1041        7553        5430
+##  4 Geor…   10214860         38643              615        3224        2296
+##  5 Illi…   12859995         49354              744        4821        3549
+##  6 Indi…    6619680         25653              373        2404        1789
+##  7 Mary…    6006401         27462              516        1666        1184
+##  8 Mass…    6794422         26562              128        2075        1608
+##  9 Mich…    9922576         41231              571        6450        4163
+## 10 Miss…    6083672         30261              502        2553        1854
+## 11 New …    8958013         22879              363        1373        1019
+## 12 New …   19795791         75165              609        6074        4389
+## 13 Nort…   10042802         34852              517        2684        1939
+## 14 Ohio    11613423         33898              500        5149        4154
+## 15 Penn…   12802503         40339              658        4305        3122
+## 16 Tenn…    6600299         40400              406        2676        1966
+## 17 Texas   27469114        113227             1316       12250        8925
+## 18 Wash…    7170351         20394              211        2705        2193
+## # … with 13 more variables: Robbery &lt;dbl&gt;, Aggravated_assault &lt;dbl&gt;,
+## #   Property_crime &lt;dbl&gt;, Burglary &lt;dbl&gt;, Larceny_theft &lt;dbl&gt;, Car_theft &lt;dbl&gt;,
+## #   adults &lt;dbl&gt;, men &lt;dbl&gt;, women &lt;dbl&gt;, men_working &lt;dbl&gt;,
+## #   women_working &lt;dbl&gt;, men_nonworking &lt;dbl&gt;, women_nonworking &lt;dbl&gt;
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">both <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">arrange</span>(<span style="color:#a6e22e">desc</span>(Violent_crime))
+</code></pre></div><pre><code>## # A tibble: 50 x 19
+##    state Population Violent_crime Murder_manslaug… Rape_revdef Rape_legdef
+##    &lt;chr&gt;      &lt;dbl&gt;         &lt;dbl&gt;            &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+##  1 Cali…   39144818        166883             1861       12811        9387
+##  2 Texas   27469114        113227             1316       12250        8925
+##  3 Flor…   20271272         93626             1041        7553        5430
+##  4 New …   19795791         75165              609        6074        4389
+##  5 Illi…   12859995         49354              744        4821        3549
+##  6 Mich…    9922576         41231              571        6450        4163
+##  7 Tenn…    6600299         40400              406        2676        1966
+##  8 Penn…   12802503         40339              658        4305        3122
+##  9 Geor…   10214860         38643              615        3224        2296
+## 10 Nort…   10042802         34852              517        2684        1939
+## # … with 40 more rows, and 13 more variables: Robbery &lt;dbl&gt;,
+## #   Aggravated_assault &lt;dbl&gt;, Property_crime &lt;dbl&gt;, Burglary &lt;dbl&gt;,
+## #   Larceny_theft &lt;dbl&gt;, Car_theft &lt;dbl&gt;, adults &lt;dbl&gt;, men &lt;dbl&gt;, women &lt;dbl&gt;,
+## #   men_working &lt;dbl&gt;, women_working &lt;dbl&gt;, men_nonworking &lt;dbl&gt;,
+## #   women_nonworking &lt;dbl&gt;
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">both<span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">select</span>(Population, Violent_crime)
+</code></pre></div><pre><code>## # A tibble: 50 x 2
+##    Population Violent_crime
+##         &lt;dbl&gt;         &lt;dbl&gt;
+##  1    4858979         22952
+##  2     738432          5392
+##  3    6828065         28012
+##  4    2978204         15526
+##  5   39144818        166883
+##  6    5456574         17515
+##  7    3590886          7845
+##  8     945934          4720
+##  9     672228          8531
+## 10   20271272         93626
+## # … with 40 more rows
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">both <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">mutate</span>(violcrimebypop<span style="color:#f92672">=</span>(Violent_crime<span style="color:#f92672">/</span>Population))<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">select</span>(state, violcrimebypop)
+</code></pre></div><pre><code>## # A tibble: 50 x 2
+##    state                violcrimebypop
+##    &lt;chr&gt;                         &lt;dbl&gt;
+##  1 Alabama                     0.00472
+##  2 Alaska                      0.00730
+##  3 Arizona                     0.00410
+##  4 Arkansas                    0.00521
+##  5 California                  0.00426
+##  6 Colorado                    0.00321
+##  7 Connecticut                 0.00218
+##  8 Delaware                    0.00499
+##  9 District of Columbia        0.0127 
+## 10 Florida                     0.00462
+## # … with 40 more rows
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#to seperate state size into 3 categorical variabels, small, medium, and large</span>
+pop_vec<span style="color:#f92672">&lt;-</span> both <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">pull</span>(Population)
+stsize<span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">cut</span>( pop_vec,
+  breaks <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>( <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2500000</span>, <span style="color:#ae81ff">6000000</span>, <span style="color:#66d9ef">Inf</span>),
+  labels <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;small.st&#34;</span>, <span style="color:#e6db74">&#34;medium.st&#34;</span>, <span style="color:#e6db74">&#34;large.st&#34;</span>),
+  right  <span style="color:#f92672">=</span> <span style="color:#66d9ef">FALSE</span>)
+
+both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">mutate</span>(stsize<span style="color:#f92672">=</span>stsize)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">group_by</span>(stsize)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarize_all</span>(n_distinct)
+</code></pre></div><pre><code>## # A tibble: 3 x 20
+##   stsize state Population Violent_crime Murder_manslaug… Rape_revdef Rape_legdef
+##   &lt;fct&gt;  &lt;int&gt;      &lt;int&gt;         &lt;int&gt;            &lt;int&gt;       &lt;int&gt;       &lt;int&gt;
+## 1 small…    16         16            16               15          16          16
+## 2 mediu…    16         16            16               16          16          16
+## 3 large…    18         18            18               18          18          18
+## # … with 13 more variables: Robbery &lt;int&gt;, Aggravated_assault &lt;int&gt;,
+## #   Property_crime &lt;int&gt;, Burglary &lt;int&gt;, Larceny_theft &lt;int&gt;, Car_theft &lt;int&gt;,
+## #   adults &lt;int&gt;, men &lt;int&gt;, women &lt;int&gt;, men_working &lt;int&gt;,
+## #   women_working &lt;int&gt;, men_nonworking &lt;int&gt;, women_nonworking &lt;int&gt;
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">both<span style="color:#f92672">&lt;-</span>both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">mutate</span>(stsize<span style="color:#f92672">=</span>stsize)
+</code></pre></div><p><em>Because the amount of violent crime is not standardized by population of the state I wanted to look at how population affects rate ofcrime. I then used mutate to normalize that vaulue by population. I could not find a data set with a categorical value other than state so I made one by designating states as small, medium and large so I could see if the correlation by state size might have changed. I did this by creating 3 almost equivalent groups.</em></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">both <span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarize</span>(ndistst<span style="color:#f92672">=</span><span style="color:#a6e22e">n_distinct</span>(state), <span style="color:#a6e22e">n</span>())
+</code></pre></div><pre><code>## # A tibble: 1 x 2
+##   ndistst `n()`
+##     &lt;int&gt; &lt;int&gt;
+## 1      50    50
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">both <span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">group_by</span>(stsize)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarize</span>(ndistst<span style="color:#f92672">=</span><span style="color:#a6e22e">n_distinct</span>(stsize), <span style="color:#a6e22e">n</span>())
+</code></pre></div><pre><code>## # A tibble: 3 x 3
+##   stsize    ndistst `n()`
+##   &lt;fct&gt;       &lt;int&gt; &lt;int&gt;
+## 1 small.st        1    16
+## 2 medium.st       1    16
+## 3 large.st        1    18
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#normalize the crime by population of the state</span>
+both<span style="color:#f92672">&lt;-</span>both <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">mutate</span>(violcrimebypop<span style="color:#f92672">=</span>(Violent_crime<span style="color:#f92672">/</span>Population),
+                   murbypop<span style="color:#f92672">=</span>(Murder_manslaughter<span style="color:#f92672">/</span>Population),
+                   robbypop<span style="color:#f92672">=</span>( Robbery <span style="color:#f92672">/</span>Population))
+
+viol<span style="color:#f92672">&lt;-</span>both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarise</span>(sdviol<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(violcrimebypop), meanviol<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(violcrimebypop), varviol<span style="color:#f92672">=</span><span style="color:#a6e22e">var</span>(violcrimebypop), maxviol<span style="color:#f92672">=</span><span style="color:#a6e22e">max</span>(violcrimebypop), minviol<span style="color:#f92672">=</span><span style="color:#a6e22e">min</span>(violcrimebypop), quanviol<span style="color:#f92672">=</span><span style="color:#a6e22e">quantile</span>(violcrimebypop, <span style="color:#ae81ff">.75</span>), corviol<span style="color:#f92672">=</span><span style="color:#a6e22e">cor</span>(violcrimebypop, adults))
+
+violbysize<span style="color:#f92672">&lt;-</span>both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">group_by</span>(stsize)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarise</span>(sdviol<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(violcrimebypop), meanviol<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(violcrimebypop), varviol<span style="color:#f92672">=</span><span style="color:#a6e22e">var</span>(violcrimebypop), maxviol<span style="color:#f92672">=</span><span style="color:#a6e22e">max</span>(violcrimebypop), minviol<span style="color:#f92672">=</span><span style="color:#a6e22e">min</span>(violcrimebypop), quanviol<span style="color:#f92672">=</span><span style="color:#a6e22e">quantile</span>(violcrimebypop, <span style="color:#ae81ff">.75</span>), corviol<span style="color:#f92672">=</span><span style="color:#a6e22e">cor</span>(violcrimebypop, adults))
+
+mur<span style="color:#f92672">&lt;-</span>both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarise</span>(sdmur<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(murbypop), meanmur<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(murbypop), varmur<span style="color:#f92672">=</span><span style="color:#a6e22e">var</span>(murbypop), maxmur<span style="color:#f92672">=</span><span style="color:#a6e22e">max</span>(murbypop), minmur<span style="color:#f92672">=</span><span style="color:#a6e22e">min</span>(murbypop), quanmur<span style="color:#f92672">=</span><span style="color:#a6e22e">quantile</span>(murbypop, <span style="color:#ae81ff">.75</span>), cormur<span style="color:#f92672">=</span><span style="color:#a6e22e">cor</span>(murbypop, adults))
+
+murbysize<span style="color:#f92672">&lt;-</span>both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">group_by</span>(stsize)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarise</span>(sdmur<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(murbypop), meanmur<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(murbypop), varmur<span style="color:#f92672">=</span><span style="color:#a6e22e">var</span>(murbypop), maxmur<span style="color:#f92672">=</span><span style="color:#a6e22e">max</span>(murbypop), minmur<span style="color:#f92672">=</span><span style="color:#a6e22e">min</span>(murbypop), quanmur<span style="color:#f92672">=</span><span style="color:#a6e22e">quantile</span>(murbypop, <span style="color:#ae81ff">.75</span>), cormur<span style="color:#f92672">=</span><span style="color:#a6e22e">cor</span>(murbypop, adults))
+
+rob<span style="color:#f92672">&lt;-</span>both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarise</span>(sdrob<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(robbypop), meanrob<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(robbypop), varrob<span style="color:#f92672">=</span><span style="color:#a6e22e">var</span>(robbypop), maxrob<span style="color:#f92672">=</span><span style="color:#a6e22e">max</span>(robbypop), minrob<span style="color:#f92672">=</span><span style="color:#a6e22e">min</span>(robbypop), quanrob<span style="color:#f92672">=</span><span style="color:#a6e22e">quantile</span>(robbypop, <span style="color:#ae81ff">.75</span>), corrob<span style="color:#f92672">=</span><span style="color:#a6e22e">cor</span>(robbypop, adults))
+
+robbysize<span style="color:#f92672">&lt;-</span>both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">group_by</span>(stsize)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarise</span>(sdrob<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(robbypop), meanrob<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(robbypop), varrob<span style="color:#f92672">=</span><span style="color:#a6e22e">var</span>(robbypop), maxrob<span style="color:#f92672">=</span><span style="color:#a6e22e">max</span>(robbypop), minrob<span style="color:#f92672">=</span><span style="color:#a6e22e">min</span>(robbypop), quanrob<span style="color:#f92672">=</span><span style="color:#a6e22e">quantile</span>(robbypop, <span style="color:#ae81ff">.75</span>), corrob<span style="color:#f92672">=</span><span style="color:#a6e22e">cor</span>(robbypop, adults))
+
+adults<span style="color:#f92672">&lt;-</span>both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarise</span>(sdadults<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(adults), meanadults<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(adults), varadults<span style="color:#f92672">=</span><span style="color:#a6e22e">var</span>(adults), maxadults<span style="color:#f92672">=</span><span style="color:#a6e22e">max</span>(adults), minadults<span style="color:#f92672">=</span><span style="color:#a6e22e">min</span>(adults), quanadults<span style="color:#f92672">=</span><span style="color:#a6e22e">quantile</span>(adults, <span style="color:#ae81ff">.75</span>), coradults<span style="color:#f92672">=</span><span style="color:#a6e22e">cor</span>(adults, murbypop))
+
+adultssize<span style="color:#f92672">&lt;-</span>both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">group_by</span>(stsize)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarise</span>(sdadults<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(adults), meanadults<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(adults), varadults<span style="color:#f92672">=</span><span style="color:#a6e22e">var</span>(adults), maxadults<span style="color:#f92672">=</span><span style="color:#a6e22e">max</span>(adults), minadults<span style="color:#f92672">=</span><span style="color:#a6e22e">min</span>(adults), quanadults<span style="color:#f92672">=</span><span style="color:#a6e22e">quantile</span>(adults, <span style="color:#ae81ff">.75</span>), coradults<span style="color:#f92672">=</span><span style="color:#a6e22e">cor</span>(adults, murbypop))
+
+men<span style="color:#f92672">&lt;-</span>both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarise</span>(sdmen<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(men), meanmen<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(men), varmen<span style="color:#f92672">=</span><span style="color:#a6e22e">var</span>(men), maxmen<span style="color:#f92672">=</span><span style="color:#a6e22e">max</span>(men), minmen<span style="color:#f92672">=</span><span style="color:#a6e22e">min</span>(men), quanmen<span style="color:#f92672">=</span><span style="color:#a6e22e">quantile</span>(men, <span style="color:#ae81ff">.75</span>), cormen<span style="color:#f92672">=</span><span style="color:#a6e22e">cor</span>(men, murbypop))
+
+mensize<span style="color:#f92672">&lt;-</span>both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">group_by</span>(stsize)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarise</span>(sdmen<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(men), meanmen<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(men), varmen<span style="color:#f92672">=</span><span style="color:#a6e22e">var</span>(men), maxmen<span style="color:#f92672">=</span><span style="color:#a6e22e">max</span>(men), minmen<span style="color:#f92672">=</span><span style="color:#a6e22e">min</span>(men), quanmen<span style="color:#f92672">=</span><span style="color:#a6e22e">quantile</span>(men, <span style="color:#ae81ff">.75</span>), cormen<span style="color:#f92672">=</span><span style="color:#a6e22e">cor</span>(men, murbypop))
+
+women<span style="color:#f92672">&lt;-</span>both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarise</span>(sdwomen<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(women), meanwomen<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(women), varwomen<span style="color:#f92672">=</span><span style="color:#a6e22e">var</span>(women), maxwomen<span style="color:#f92672">=</span><span style="color:#a6e22e">max</span>(women), minwomen<span style="color:#f92672">=</span><span style="color:#a6e22e">min</span>(women), quanmen<span style="color:#f92672">=</span><span style="color:#a6e22e">quantile</span>(women, <span style="color:#ae81ff">.75</span>), cormen<span style="color:#f92672">=</span><span style="color:#a6e22e">cor</span>(women, murbypop))
+
+womensize<span style="color:#f92672">&lt;-</span>both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">group_by</span>(stsize)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarise</span>(sdwomen<span style="color:#f92672">=</span><span style="color:#a6e22e">sd</span>(women), meanwomen<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(women), varwomen<span style="color:#f92672">=</span><span style="color:#a6e22e">var</span>(women), maxwomen<span style="color:#f92672">=</span><span style="color:#a6e22e">max</span>(women), minwomen<span style="color:#f92672">=</span><span style="color:#a6e22e">min</span>(women), quanmen<span style="color:#f92672">=</span><span style="color:#a6e22e">quantile</span>(women, <span style="color:#ae81ff">.75</span>), cormen<span style="color:#f92672">=</span><span style="color:#a6e22e">cor</span>(women, murbypop))
+
+normboth<span style="color:#f92672">&lt;-</span>both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">select</span>(violcrimebypop,murbypop,robbypop,adults,men,women)<span style="color:#f92672">%&gt;%</span>na.omit
+<span style="color:#a6e22e">cor</span>(normboth)
+</code></pre></div><pre><code>##                violcrimebypop   murbypop    robbypop      adults       men
+## violcrimebypop     1.00000000  0.8597597  0.84098123 -0.04613757 0.1351449
+## murbypop           0.85975971  1.0000000  0.86875086 -0.13642568 0.1016489
+## robbypop           0.84098123  0.8687509  1.00000000  0.08912985 0.3144538
+## adults            -0.04613757 -0.1364257  0.08912985  1.00000000 0.9161553
+## men                0.13514490  0.1016489  0.31445376  0.91615529 1.0000000
+## women             -0.17517838 -0.2972092 -0.08787929  0.94149363 0.7406463
+##                      women
+## violcrimebypop -0.17517838
+## murbypop       -0.29720922
+## robbypop       -0.08787929
+## adults          0.94149363
+## men             0.74064625
+## women           1.00000000
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">kable</span>(viol) <span style="color:#f92672">%&gt;%</span>
+  <span style="color:#a6e22e">kable_styling</span>(bootstrap_options <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;striped&#34;</span>, <span style="color:#e6db74">&#34;hover&#34;</span>,<span style="color:#e6db74">&#34;condensed&#34;</span>))
+</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">kable</span>(violbysize) <span style="color:#f92672">%&gt;%</span>
+  <span style="color:#a6e22e">kable_styling</span>(bootstrap_options <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;striped&#34;</span>, <span style="color:#e6db74">&#34;hover&#34;</span>,<span style="color:#e6db74">&#34;condensed&#34;</span>))
+</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">kable</span>(mur) <span style="color:#f92672">%&gt;%</span>
+  <span style="color:#a6e22e">kable_styling</span>(bootstrap_options <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;striped&#34;</span>, <span style="color:#e6db74">&#34;hover&#34;</span>,<span style="color:#e6db74">&#34;condensed&#34;</span>))
+</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">kable</span>(murbysize) <span style="color:#f92672">%&gt;%</span>
+  <span style="color:#a6e22e">kable_styling</span>(bootstrap_options <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;striped&#34;</span>, <span style="color:#e6db74">&#34;hover&#34;</span>,<span style="color:#e6db74">&#34;condensed&#34;</span>))
+</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">kable</span>(rob) <span style="color:#f92672">%&gt;%</span>
+  <span style="color:#a6e22e">kable_styling</span>(bootstrap_options <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;striped&#34;</span>, <span style="color:#e6db74">&#34;hover&#34;</span>,<span style="color:#e6db74">&#34;condensed&#34;</span>))
+</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">kable</span>(robbysize) <span style="color:#f92672">%&gt;%</span>
+  <span style="color:#a6e22e">kable_styling</span>(bootstrap_options <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;striped&#34;</span>, <span style="color:#e6db74">&#34;hover&#34;</span>,<span style="color:#e6db74">&#34;condensed&#34;</span>))
+</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">kable</span>(adults) <span style="color:#f92672">%&gt;%</span>
+  <span style="color:#a6e22e">kable_styling</span>(bootstrap_options <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;striped&#34;</span>, <span style="color:#e6db74">&#34;hover&#34;</span>,<span style="color:#e6db74">&#34;condensed&#34;</span>))
+</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">kable</span>(adultssize) <span style="color:#f92672">%&gt;%</span>
+  <span style="color:#a6e22e">kable_styling</span>(bootstrap_options <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;striped&#34;</span>, <span style="color:#e6db74">&#34;hover&#34;</span>,<span style="color:#e6db74">&#34;condensed&#34;</span>))
+</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">kable</span>(men) <span style="color:#f92672">%&gt;%</span>
+  <span style="color:#a6e22e">kable_styling</span>(bootstrap_options <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;striped&#34;</span>, <span style="color:#e6db74">&#34;hover&#34;</span>,<span style="color:#e6db74">&#34;condensed&#34;</span>))
+</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">kable</span>(mensize) <span style="color:#f92672">%&gt;%</span>
+  <span style="color:#a6e22e">kable_styling</span>(bootstrap_options <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;striped&#34;</span>, <span style="color:#e6db74">&#34;hover&#34;</span>,<span style="color:#e6db74">&#34;condensed&#34;</span>))
+</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">kable</span>(women) <span style="color:#f92672">%&gt;%</span>
+  <span style="color:#a6e22e">kable_styling</span>(bootstrap_options <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;striped&#34;</span>, <span style="color:#e6db74">&#34;hover&#34;</span>,<span style="color:#e6db74">&#34;condensed&#34;</span>))
+</code></pre></div><!-- raw HTML omitted -->
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">kable</span>(womensize) <span style="color:#f92672">%&gt;%</span>
+  <span style="color:#a6e22e">kable_styling</span>(bootstrap_options <span style="color:#f92672">=</span> <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;striped&#34;</span>, <span style="color:#e6db74">&#34;hover&#34;</span>,<span style="color:#e6db74">&#34;condensed&#34;</span>))
+</code></pre></div><!-- raw HTML omitted -->
+<h4 id="tidying-rearranging-widelong">Tidying: Rearranging Wide/Long</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">both1<span style="color:#f92672">&lt;-</span>both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">pivot_wider</span>(names_from<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;stsize&#34;</span>, values_from<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Population&#34;</span>)
+both1 <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">pivot_longer</span>(cols<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;medium.st&#34;</span>,<span style="color:#e6db74">&#34;small.st&#34;</span>,<span style="color:#e6db74">&#34;large.st&#34;</span>),names_to<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;stsize&#34;</span>,values_to<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Population&#34;</span>)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">na.omit</span>()
+</code></pre></div><pre><code>## # A tibble: 46 x 23
+##    state Violent_crime Murder_manslaug… Rape_revdef Rape_legdef Robbery
+##    &lt;chr&gt;         &lt;dbl&gt;            &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Alab…         22952              348        2039        1456    4611
+##  2 Alas…          5392               59         901         650     761
+##  3 Ariz…         28012              309        3108        2294    6360
+##  4 Arka…         15526              181        1931        1300    2098
+##  5 Cali…        166883             1861       12811        9387   52862
+##  6 Colo…         17515              176        3257        2377    3323
+##  7 Conn…          7845              117         773         582    2892
+##  8 Dela…          4720               63         341         243    1235
+##  9 Dist…          8531              162         494         366    3742
+## 10 Flor…         93626             1041        7553        5430   21137
+## # … with 36 more rows, and 17 more variables: Aggravated_assault &lt;dbl&gt;,
+## #   Property_crime &lt;dbl&gt;, Burglary &lt;dbl&gt;, Larceny_theft &lt;dbl&gt;, Car_theft &lt;dbl&gt;,
+## #   adults &lt;dbl&gt;, men &lt;dbl&gt;, women &lt;dbl&gt;, men_working &lt;dbl&gt;,
+## #   women_working &lt;dbl&gt;, men_nonworking &lt;dbl&gt;, women_nonworking &lt;dbl&gt;,
+## #   violcrimebypop &lt;dbl&gt;, murbypop &lt;dbl&gt;, robbypop &lt;dbl&gt;, stsize &lt;chr&gt;,
+## #   Population &lt;dbl&gt;
+</code></pre><h4 id="visualizing">Visualizing</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">library</span>(ggplot2) 
+
+normboth<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">select_if</span>(is.numeric)<span style="color:#f92672">%&gt;%</span>cor<span style="color:#f92672">%&gt;%</span>as.data.frame<span style="color:#f92672">%&gt;%</span>
+rownames_to_column<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">pivot_longer</span>(<span style="color:#ae81ff">-1</span>)<span style="color:#f92672">%&gt;%</span>
+<span style="color:#a6e22e">ggplot</span>(<span style="color:#a6e22e">aes</span>(rowname,name,fill<span style="color:#f92672">=</span>value))<span style="color:#f92672">+</span><span style="color:#a6e22e">geom_tile</span>()<span style="color:#f92672">+</span>
+<span style="color:#a6e22e">geom_text</span>(<span style="color:#a6e22e">aes</span>(label<span style="color:#f92672">=</span><span style="color:#a6e22e">round</span>(value,<span style="color:#ae81ff">2</span>)))<span style="color:#f92672">+</span>
+<span style="color:#a6e22e">xlab</span>(<span style="color:#e6db74">&#34;&#34;</span>)<span style="color:#f92672">+</span><span style="color:#a6e22e">ylab</span>(<span style="color:#e6db74">&#34;&#34;</span>)<span style="color:#f92672">+</span> <span style="color:#a6e22e">scale_fill_gradient2</span>(low<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;yellow&#34;</span>, high<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;red&#34;</span>)
+</code></pre></div><p><!-- raw HTML omitted --></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">ggplot</span>(data <span style="color:#f92672">=</span> both, <span style="color:#a6e22e">aes</span>(x <span style="color:#f92672">=</span> men , y <span style="color:#f92672">=</span>robbypop,color<span style="color:#f92672">=</span>stsize))<span style="color:#f92672">+</span><span style="color:#a6e22e">geom_point</span>()<span style="color:#f92672">+</span><span style="color:#a6e22e">theme_light</span>()<span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">ggtitle</span>(<span style="color:#e6db74">&#34;Violent Crime and Daily Exercise&#34;</span>) <span style="color:#f92672">+</span> <span style="color:#a6e22e">ylab</span>(<span style="color:#e6db74">&#34;Violent Crime by Population&#34;</span>) <span style="color:#f92672">+</span> <span style="color:#a6e22e">xlab</span>(<span style="color:#e6db74">&#34;Percent of Adults that Exercise&#34;</span>)<span style="color:#f92672">+</span><span style="color:#a6e22e">facet_wrap</span>(<span style="color:#f92672">~</span>stsize)
+</code></pre></div><p><!-- raw HTML omitted --></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#ggplot(data = both, aes(x = women, fill=stsize))+geom_histogram(bins=50)+theme_bw()+</span>
+  <span style="color:#75715e">#ggtitle(&#34;Recommended Daily Exercise by Adult&#34;) + xlab(&#34;Percent of Adults that Exercise&#34;)+</span>
+ <span style="color:#75715e"># theme(legend.position=c(.8,.7))+geom_errorbar(stat=&#34;summary&#34;)</span>
+
+<span style="color:#a6e22e">ggplot</span>(data <span style="color:#f92672">=</span> both, <span style="color:#a6e22e">aes</span>(x <span style="color:#f92672">=</span> women,fill<span style="color:#f92672">=</span>stsize))<span style="color:#f92672">+</span><span style="color:#a6e22e">geom_density</span>(alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">.75</span>)<span style="color:#f92672">+</span><span style="color:#a6e22e">theme_bw</span>()<span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">ggtitle</span>(<span style="color:#e6db74">&#34;Recommended Daily Exercise by Adult&#34;</span>) <span style="color:#f92672">+</span> <span style="color:#a6e22e">xlab</span>(<span style="color:#e6db74">&#34;Percent of Adults that Exercise&#34;</span>)<span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">theme</span>(legend.position<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">.8</span>,<span style="color:#ae81ff">.7</span>))<span style="color:#f92672">+</span><span style="color:#a6e22e">geom_rug</span>()
+</code></pre></div><p><!-- raw HTML omitted --></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">ggplot</span>(both, <span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>adults, y<span style="color:#f92672">=</span>violcrimebypop, group<span style="color:#f92672">=</span>stsize))<span style="color:#f92672">+</span><span style="color:#a6e22e">geom_boxplot</span>()<span style="color:#f92672">+</span><span style="color:#a6e22e">geom_jitter</span>(alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">.5</span>)
+</code></pre></div><p><!-- raw HTML omitted --></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">library</span>(ggplot2)
+<span style="color:#75715e">#library(ggExtra)</span>
+p1<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">ggplot</span>(both, <span style="color:#a6e22e">aes</span>(x <span style="color:#f92672">=</span> violcrimebypop , y <span style="color:#f92672">=</span>women))<span style="color:#f92672">+</span><span style="color:#a6e22e">geom_point</span>()
+<span style="color:#75715e">#ggMarginal(p1,type = &#39;histogram&#39;)</span>
+
+<span style="color:#a6e22e">ggplot</span>(both, <span style="color:#a6e22e">aes</span>(x <span style="color:#f92672">=</span> stsize))<span style="color:#f92672">+</span>
+<span style="color:#a6e22e">geom_bar</span>(<span style="color:#a6e22e">aes</span>(y<span style="color:#f92672">=</span>adults), stat<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;summary&#34;</span>, fun.y<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;mean&#34;</span>)
+</code></pre></div><p><!-- raw HTML omitted --></p>
+<h4 id="dimensionality-reduction">Dimensionality Reduction</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">library</span>(cluster)
+
+pam_dat<span style="color:#f92672">&lt;-</span>both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">select</span>(robbypop,murbypop,violcrimebypop,adults,men,women)
+sil_width<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">vector</span>()
+<span style="color:#a6e22e">for</span>(i in <span style="color:#ae81ff">2</span><span style="color:#f92672">:</span><span style="color:#ae81ff">10</span>){
+pam_fit <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">pam</span>(pam_dat, k <span style="color:#f92672">=</span> i)
+sil_width[i] <span style="color:#f92672">&lt;-</span> pam_fit<span style="color:#f92672">$</span>silinfo<span style="color:#f92672">$</span>avg.width}
+<span style="color:#a6e22e">ggplot</span>()<span style="color:#f92672">+</span><span style="color:#a6e22e">geom_line</span>(<span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">10</span>,y<span style="color:#f92672">=</span>sil_width))<span style="color:#f92672">+</span><span style="color:#a6e22e">scale_x_continuous</span>(name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;k&#34;</span>,breaks<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">10</span>)
+</code></pre></div><p><!-- raw HTML omitted --></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">pam2<span style="color:#f92672">&lt;-</span>both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">select</span>(robbypop,murbypop,violcrimebypop,adults,men,women)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">pam</span>(<span style="color:#ae81ff">3</span>)
+
+final<span style="color:#f92672">&lt;-</span>both<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">mutate</span>(cluster<span style="color:#f92672">=</span><span style="color:#a6e22e">as.factor</span>(pam2<span style="color:#f92672">$</span>clustering))
+confmat<span style="color:#f92672">&lt;-</span>final<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">group_by</span>(stsize)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">count</span>(cluster)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">arrange</span>(<span style="color:#a6e22e">desc</span>(n))<span style="color:#f92672">%&gt;%</span>
+<span style="color:#a6e22e">pivot_wider</span>(names_from<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;cluster&#34;</span>,values_from<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;n&#34;</span>,values_fill <span style="color:#f92672">=</span> <span style="color:#a6e22e">list</span>(<span style="color:#e6db74">&#39;n&#39;</span><span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>))
+confmat
+</code></pre></div><pre><code>## # A tibble: 3 x 4
+## # Groups:   stsize [3]
+##   stsize      `3`   `1`   `2`
+##   &lt;fct&gt;     &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1 large.st     13     3     2
+## 2 medium.st     6     7     3
+## 3 small.st      5     5     6
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">round</span>(<span style="color:#a6e22e">sum</span>(<span style="color:#a6e22e">diag</span>(<span style="color:#a6e22e">as.matrix</span>(confmat[,<span style="color:#ae81ff">2</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span>])))<span style="color:#f92672">/</span><span style="color:#a6e22e">sum</span>(confmat[,<span style="color:#ae81ff">2</span><span style="color:#f92672">:</span><span style="color:#ae81ff">4</span>]),<span style="color:#ae81ff">4</span>)
+</code></pre></div><pre><code>## [1] 0.52
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">library</span>(plotly)
+final <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">plot_ly</span>(x<span style="color:#f92672">=</span> <span style="color:#f92672">~</span>violcrimebypop, y <span style="color:#f92672">=</span> <span style="color:#f92672">~</span>robbypop, z <span style="color:#f92672">=</span> <span style="color:#f92672">~</span>murbypop,  color <span style="color:#f92672">=</span>  <span style="color:#f92672">~</span>cluster, 
+    type <span style="color:#f92672">=</span>  <span style="color:#e6db74">&#34;scatter3d&#34;</span>,  mode <span style="color:#f92672">=</span>  <span style="color:#e6db74">&#34;markers&#34;</span>,  symbol <span style="color:#f92672">=</span>  <span style="color:#f92672">~</span>stsize,  symbols <span style="color:#f92672">=</span>  <span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#39;circle&#39;</span>, <span style="color:#e6db74">&#39;x&#39;</span>, <span style="color:#e6db74">&#39;o&#39;</span>),size <span style="color:#f92672">=</span> <span style="color:#ae81ff">.4</span>)
+</code></pre></div><p>preservef2314b110a8d8da4</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">library</span>(GGally) <span style="color:#75715e">#install.packages(&#34;GGally&#34;) if it doesn&#39;t work</span>
+<span style="color:#a6e22e">ggpairs</span>(final, columns<span style="color:#f92672">=</span>(<span style="color:#ae81ff">21</span><span style="color:#f92672">:</span><span style="color:#ae81ff">23</span>), <span style="color:#a6e22e">aes</span>(color<span style="color:#f92672">=</span>stsize, shape<span style="color:#f92672">=</span>cluster))
+</code></pre></div><p><!-- raw HTML omitted --></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">ggpairs</span>(final, columns<span style="color:#f92672">=</span>(<span style="color:#ae81ff">13</span><span style="color:#f92672">:</span><span style="color:#ae81ff">15</span>), <span style="color:#a6e22e">aes</span>(color<span style="color:#f92672">=</span>stsize, shape<span style="color:#f92672">=</span>cluster))
+</code></pre></div><p><!-- raw HTML omitted --></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">plot</span>(pam2,which<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)
+</code></pre></div><p><!-- raw HTML omitted -->
+&hellip;</p>
+
+              <hr>
+              <div class="related-posts">
+                <h5>Related Posts</h5>
+                
+              </div>
+            </div>
+          </div>
+          <hr>
+        <div class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+        </div>
+      </div>
+      
+    </div>
+
+    
+    <footer>
+  <div id="footer">
+    <div class="container">
+      <p class="text-muted">&copy; All rights reserved. Powered by <a href="https://gohugo.io/">Hugo</a> and
+      <a href="http://www.github.com/nurlansu/hugo-sustain/">sustain</a> with ♥</p>
+    </div>
+  </div>
+</footer>
+<div class="footer"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/docs.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script src="/js/ie10-viewport-bug-workaround.js"></script>
+
+
+    
+  </body>
+</html>

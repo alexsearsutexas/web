@@ -69,11 +69,11 @@ glimpse(jasa)</code></pre>
 df&lt;-data.frame(jasa)%&gt;%rename(Y1=survive,Y2=age)
 p&lt;-ggplot(df, aes(Y1,Y2))+theme_classic()+xlim(-10, 10)+geom_point(alpha=.5)+geom_density_2d(h=2)+coord_fixed()
 ggMarginal(p,type=&quot;density&quot;,xparams = list(bw=.5), yparams=list(bw=.5))</code></pre>
-<p><img src="/project2_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/project2-2_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggplot(jasa, aes(x = age, y = wait.time)) +
   geom_point(alpha = .5) + geom_density_2d(h=2) + coord_fixed() + facet_wrap(~survive)+
   scale_x_continuous(breaks = seq(20, 62, by = 20))+theme_classic(base_size = 10)</code></pre>
-<p><img src="/project2_files/figure-html/unnamed-chunk-2-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/project2-2_files/figure-html/unnamed-chunk-2-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>covmats&lt;-jasa%&gt;%select(survive,age,reject,surgery,wait.time)%&gt;%group_by(survive)%&gt;%do(covs=cov(.[2:5]))
 for(i in 1:3){print(as.character(covmats$survive[i])); print(covmats$covs[i])}</code></pre>
 <pre><code>## [1] &quot;0&quot;
@@ -176,11 +176,11 @@ new&lt;-data.frame(age=sample(jasar$age),survive=jasa$survive)
 rand_dist[i]&lt;-mean(new[new$survive==1,]$age)-
 mean(new[new$survive==0,]$age)}
 hist(rand_dist,main=&quot;Survival by Age&quot;,ylab=&quot;Age&quot;);abline(v = 7.0487 ,col=&quot;blue&quot;); abline(v = -7.0487    ,col=&quot;blue&quot;)</code></pre>
-<p><img src="/project2_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/project2-2_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>mean(rand_dist&gt;7.0487    | rand_dist&lt; -7.0487   )</code></pre>
-<pre><code>## [1] 0.002</code></pre>
+<pre><code>## [1] 0.0016</code></pre>
 <pre class="r"><code>ggplot(jasar,aes(age,fill=survive))+geom_histogram(bins=6.5)+facet_wrap(~survive,ncol=2)+theme(legend.position=&quot;none&quot;+theme_classic())</code></pre>
-<p><img src="/project2_files/figure-html/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/project2-2_files/figure-html/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p><em>I used a randomization test in which the null hypothesis was that mean age is the same for people that survived vs people that did not survive surgery. The alternate hypothesis is that the mean age is different for people that survived vs people that did not survive. The two-tailed p value is 0.0012 so we can reject the null hypothesis. This means the mean age is different for people that survived vs people that did not survive.</em></p>
 </div>
 <div id="linear-regression-model" class="section level4">
@@ -215,12 +215,12 @@ summary(fit) </code></pre>
 <pre class="r"><code>ggplot(jasa, aes(x=wait.t_c, y=age,group=reject))+theme_classic()+geom_point(aes(color=reject))+
   geom_smooth(method=&quot;lm&quot;,formula=y~1,se=F,fullrange=T,aes(color=reject))+
 theme(legend.position=c(.9,.25))+xlab(&quot;Wait.t_c&quot;)+ggtitle(&quot;Linear Regression of Age with Wait Time and Rejection Status&quot;)</code></pre>
-<p><img src="/project2_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/project2-2_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>#linear relationships
 resids&lt;-fit$residuals
 fitvals&lt;-fit$fitted.values
 ggplot()+geom_point(aes(fitvals,resids), color=&quot;blue&quot;)+theme_classic()</code></pre>
-<p><img src="/project2_files/figure-html/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/project2-2_files/figure-html/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>#normality 
 shapiro.test(resids)</code></pre>
 <pre><code>## 
@@ -255,9 +255,9 @@ bptest(fit)</code></pre>
 
 samp_distn%&gt;%t%&gt;%as.data.frame%&gt;%summarize_all(sd)</code></pre>
 <pre><code>##   (Intercept)   reject  surgery   wait.t_c reject:surgery reject:wait.t_c
-## 1    2.171822 2.422005 3.284435 0.04522004             NA      0.05387612
+## 1    2.232705 2.482252 3.449449 0.04661166             NA      0.05575925
 ##   surgery:wait.t_c
-## 1               NA</code></pre>
+## 1          0.14223</code></pre>
 <p><em>The SEs in this bootstrapped model increased from all the robust SEs. And different from the original SEs by increasing for the intercept, reject, wait.t_c, and reject:wait.t_c, and decreased for surgery.</em></p>
 </div>
 <div id="logistic-regression-and-10-fold-cv" class="section level4">
@@ -317,10 +317,10 @@ data%&gt;%ggplot()+geom_density(aes(logit,color=outcome,fill=outcome), alpha=.4)
   geom_text(x=-1.75,y=.008,label=&quot;FN = 10&quot;)+
   geom_text(x=1,y=.006,label=&quot;FP = 2&quot;)+
   geom_text(x=5,y=.04,label=&quot;TP = 22&quot;)</code></pre>
-<p><img src="/project2_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/project2-2_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ROCplot&lt;-ggplot(data)+geom_roc(aes(d=y,m=probs), n.cuts=0)+theme_classic()
 ROCplot</code></pre>
-<p><img src="/project2_files/figure-html/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/project2-2_files/figure-html/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>calc_auc(ROCplot)</code></pre>
 <pre><code>##   PANEL group       AUC
 ## 1     1    -1 0.8973577</code></pre>
