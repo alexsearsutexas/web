@@ -21,7 +21,7 @@ theme = "hugo-sustain"
 
 [params.social]
   Email         = "alexsears@utexas.edu"
-  github        = "alexsearsutexas""
+  Github        = "alexsearsutexas"
 
 ## Main Menu
 [[menu.main]]
