@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1588807484430.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2215147434",
+    "id" : "DFF68094",
+    "lastKnownWriteTime" : 1588807028,
+    "last_content_update" : 1588807028,
+    "path" : "~/Desktop/web/public/blog/migrate-from-jekyll/index.html",
+    "project_path" : "public/blog/migrate-from-jekyll/index.html",
+    "properties" : {
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 10,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "html"
+}

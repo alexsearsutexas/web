@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1588807458877.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "F2FCC39",
+    "lastKnownWriteTime" : 1588807170,
+    "last_content_update" : 1588807170,
+    "path" : "~/Desktop/web/public/blog/index.xml",
+    "project_path" : "public/blog/index.xml",
+    "properties" : {
+        "cursorPosition" : "15,46",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "xml"
+}
