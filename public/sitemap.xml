@@ -128,7 +128,15 @@
   </url>
   
   <url>
-    <loc>/project2-2/</loc>
+    <loc>/proj2-2/</loc>
+  </url>
+  
+  <url>
+    <loc>/proj2-2.knit/</loc>
+  </url>
+  
+  <url>
+    <loc>/proj2-2.utf8/</loc>
   </url>
   
 </urlset>

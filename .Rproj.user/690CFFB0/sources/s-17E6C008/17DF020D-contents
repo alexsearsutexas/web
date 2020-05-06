@@ -10,4 +10,4 @@ title: Projects
 ## Projects
 Here are some projects I have recently completed:
 - [Exploratory Data Analysis](/project1-1/)
-- [Modeling, Testing, and Predicting](/project2/)
+- [Modeling, Testing, and Predicting](/proj2-2/)

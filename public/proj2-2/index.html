@@ -56,7 +56,7 @@
       <div class="container">
         <div class="blog-post">
           <h3>
-            <strong><a href="/project2-2/">Project 2: Modeling, Testing, and Predicting</a></strong>
+            <strong><a href="/proj2-2/">Project 2: Modeling, Testing, and Predicting</a></strong>
           </h3>
         </div>
         <div class="blog-title">
@@ -89,8 +89,8 @@ glimpse(jasa)</code></pre>
 <h4>0. Introduction</h4>
 <p><em>The data set is the survival of patients on the waiting list for a Stanford heart transplant program in 1974 that was published by John Crowley &amp; Marie Hu[1]. Survive is if the patient survived with 1 being that they died. Age is the age of the patient in years. Reject is whether or not they rejected the transplant with 1 being they did. Surgery is if the had a prior bypass surgery with 1 being they did. accept.dt and tx.dt are the acceptance into the program and the date of the transplant respectively. wait.time is the time before the pateint had the transplant (which is just days between accept.dt and tx.date).There are 65 observations after removing the NAs.</em></p>
 </div>
-<div id="section" class="section level4">
-<h4>1.</h4>
+<div id="manova-anova-post-hoc-t-tests" class="section level4">
+<h4>1. MANOVA, ANOVA, Post-Hoc t Tests</h4>
 <pre class="r"><code>shapiro.test(jasa$age)</code></pre>
 <pre><code>## 
 ##  Shapiro-Wilk normality test
@@ -125,11 +125,11 @@ glimpse(jasa)</code></pre>
 df&lt;-data.frame(jasa)%&gt;%rename(Y1=survive,Y2=age)
 p&lt;-ggplot(df, aes(Y1,Y2))+theme_classic()+xlim(-10, 10)+geom_point(alpha=.5)+geom_density_2d(h=2)+coord_fixed()
 ggMarginal(p,type=&quot;density&quot;,xparams = list(bw=.5), yparams=list(bw=.5))</code></pre>
-<p><img src="/project2-2_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/proj2-2_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>ggplot(jasa, aes(x = age, y = wait.time)) +
   geom_point(alpha = .5) + geom_density_2d(h=2) + coord_fixed() + facet_wrap(~survive)+
   scale_x_continuous(breaks = seq(20, 62, by = 20))+theme_classic(base_size = 10)</code></pre>
-<p><img src="/project2-2_files/figure-html/unnamed-chunk-2-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="/proj2-2_files/figure-html/unnamed-chunk-2-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>covmats&lt;-jasa%&gt;%select(survive,age,reject,surgery,wait.time)%&gt;%group_by(survive)%&gt;%do(covs=cov(.[2:5]))
 for(i in 1:3){print(as.character(covmats$survive[i])); print(covmats$covs[i])}</code></pre>
 <pre><code>## [1] &quot;0&quot;
@@ -218,63 +218,10 @@ summary(man1)</code></pre>
 <pre><code>## [1] 0.007142857</code></pre>
 <p><em>After performing the MANOVA to determine differences in survival with my dependent variables, the p value is less than 0.05, with an F value of 14.791 which means there are mean differences across the levels of survive (dead,1 or alive,0). When I performed univariate ANOVAs, I found that the mean differences that were significant occur across age and reject. I performed 1 MANOVA, 4 ANOVA, and 2 post hoc t tests. The probability of type I error unadjusted is 30.16627%. Adjusted according to Bonferroni correction it is 0.007142857. Age and reject are still significant after the correction. The significant differences in survival were age of the patient and if they rejected the transplant. Assumptions that were probably met were sample size because there are 65 observations, no extreme outliers, and no multicollinearity. Assumptions that were not met are multivariate normality and homogeneity of (co)variances because they are not similar across the groups and multivariate normality of DVs.</em></p>
 </div>
-<div id="section-1" class="section level4">
-<h4>2.</h4>
+<div id="randomization-test" class="section level4">
+<h4>2. Randomization Test</h4>
 <pre class="r"><code>jasar&lt;-jasa%&gt;%select(survive,age)
-jasar</code></pre>
-<pre><code>##    survive      age
-## 3        1 54.29706
-## 4        1 40.26283
-## 7        1 50.86927
-## 10       1 42.50240
-## 11       1 47.98084
-## 13       1 54.57358
-## 14       1 54.01232
-## 16       1 49.44832
-## 18       1 56.84873
-## 20       1 55.27995
-## 21       1 43.34292
-## 22       1 42.78439
-## 23       1 58.35729
-## 24       1 51.80014
-## 25       0 33.22382
-## 28       1 54.02327
-## 30       1 44.91170
-## 32       1 64.40794
-## 33       0 48.90349
-## 34       0 40.55305
-## 36       1 48.92539
-## 37       1 61.50034
-## 38       1 41.47023
-## 40       0 48.48186
-## 41       0 45.30322
-## 45       1 36.18344
-## 46       1 48.61054
-## 47       1 47.09925
-## 49       0 36.65435
-## 51       1 48.73374
-## 55       1 52.45448
-## 56       0 38.74333
-## 58       1 48.01643
-## 59       0 41.38261
-## 60       1 49.05407
-## 63       0 32.65982
-## 64       1 48.81588
-## 65       1 51.29363
-## 67       1 19.55099
-## 68       1 45.24025
-## 69       0 47.98905
-## 70       1 53.00205
-## 71       0 47.40862
-## 72       0 26.72690
-## 73       1 56.33128
-## 74       1 29.16632
-## 76       0 52.08487
-## 78       0 48.70363
-## 79       1 53.78234
-## 80       0 46.44490
-##  [ reached &#39;max&#39; / getOption(&quot;max.print&quot;) -- omitted 15 rows ]</code></pre>
-<pre class="r"><code>jasar%&gt;%group_by(survive)%&gt;%summarize(means=mean(age))%&gt;%summarize(`mean_diff:`=diff(means))</code></pre>
+jasar%&gt;%group_by(survive)%&gt;%summarize(means=mean(age))%&gt;%summarize(`mean_diff:`=diff(means))</code></pre>
 <pre><code>## # A tibble: 1 x 1
 ##   `mean_diff:`
 ##          &lt;dbl&gt;
@@ -284,16 +231,16 @@ for(i in 1:5000){
 new&lt;-data.frame(age=sample(jasar$age),survive=jasa$survive)
 rand_dist[i]&lt;-mean(new[new$survive==1,]$age)-
 mean(new[new$survive==0,]$age)}
-hist(rand_dist,main=&quot;Survival by Age&quot;,ylab=&quot;Age&quot;);abline(v = 7.0487 ,col=&quot;red&quot;); abline(v = -7.0487 ,col=&quot;red&quot;)</code></pre>
-<p><img src="/project2-2_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+hist(rand_dist,main=&quot;Survival by Age&quot;,ylab=&quot;Age&quot;);abline(v = 7.0487 ,col=&quot;blue&quot;); abline(v = -7.0487    ,col=&quot;blue&quot;)</code></pre>
+<p><img src="/proj2-2_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>mean(rand_dist&gt;7.0487    | rand_dist&lt; -7.0487   )</code></pre>
-<pre><code>## [1] 0.0014</code></pre>
+<pre><code>## [1] 0.0018</code></pre>
 <pre class="r"><code>ggplot(jasar,aes(age,fill=survive))+geom_histogram(bins=6.5)+facet_wrap(~survive,ncol=2)+theme(legend.position=&quot;none&quot;+theme_classic())</code></pre>
-<p><img src="/project2-2_files/figure-html/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;" />
-<em>I used a randomization test in which the null hypothesis was that mean age is the same for people that survived vs people that did not survive surgery. The alternate hypothesis is that the mean age is different for people that survived vs people that did not survive. The two-tailed p value is 0.0012 so we can reject the null hypothesis. This means the mean age is different for people that survived vs people that did not survive.</em></p>
+<p><img src="/proj2-2_files/figure-html/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><em>I used a randomization test in which the null hypothesis was that mean age is the same for people that survived vs people that did not survive surgery. The alternate hypothesis is that the mean age is different for people that survived vs people that did not survive. The two-tailed p value is 0.0012 so we can reject the null hypothesis. This means the mean age is different for people that survived vs people that did not survive.</em></p>
 </div>
-<div id="section-2" class="section level4">
-<h4>3.</h4>
+<div id="linear-regression-model" class="section level4">
+<h4>3. Linear Regression Model</h4>
 <pre class="r"><code>jasa$wait.t_c&lt;-jasa$wait.time-mean(jasa$wait.time)
 fit&lt;-lm(age~(reject+surgery+wait.t_c)^2,data=jasa,family=&quot;binomial&quot;)
 summary(fit) </code></pre>
@@ -323,13 +270,13 @@ summary(fit) </code></pre>
 ## F-statistic: 2.704 on 6 and 58 DF,  p-value: 0.02201</code></pre>
 <pre class="r"><code>ggplot(jasa, aes(x=wait.t_c, y=age,group=reject))+theme_classic()+geom_point(aes(color=reject))+
   geom_smooth(method=&quot;lm&quot;,formula=y~1,se=F,fullrange=T,aes(color=reject))+
-theme(legend.position=c(.9,.19))+xlab(&quot;Wait.t_c&quot;)+ggtitle(&quot;Linear Regression of Age with Wait Time and Rejection Status&quot;)</code></pre>
-<p><img src="/project2-2_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+theme(legend.position=c(.9,.25))+xlab(&quot;Wait.t_c&quot;)+ggtitle(&quot;Linear Regression of Age with Wait Time and Rejection Status&quot;)</code></pre>
+<p><img src="/proj2-2_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>#linear relationships
 resids&lt;-fit$residuals
 fitvals&lt;-fit$fitted.values
-ggplot()+geom_point(aes(fitvals,resids), fill=&quot;blue&quot;, color=&quot;blue&quot;)+theme_classic()</code></pre>
-<p><img src="/project2-2_files/figure-html/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
+ggplot()+geom_point(aes(fitvals,resids), color=&quot;blue&quot;)+theme_classic()</code></pre>
+<p><img src="/proj2-2_files/figure-html/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>#normality 
 shapiro.test(resids)</code></pre>
 <pre><code>## 
@@ -355,29 +302,137 @@ bptest(fit)</code></pre>
 ## surgery:wait.t_c  0.04141895 0.07740921</code></pre>
 <p><em>When reject and surgery are 0 and wait time is the average, age is 41.620 years old. When reject is 1, the age goes up by 9.160 years, when surgery is 1, the age goes up by 2.527 years, and when wait time is the average, age goes up by 0.013 years. When you compare reject to surgery, age goes down by 5.170 years. When you compare reject to average wait time, age goes down by 0.011 years. When you compare surgery to average wait time, age goes up by 0.041 years. Linearity looked to be supported. Normality was supported. Equal variance was rejected with the BP test so I corrected with robust SEs. The SEs increased for the intercept, reject, wait.t_c, and surgery:wait.t_c. They decreased for surgery, reject:surgery, and reject:wait.t_c. My model explains 21.86% of the variation in the outcome.</em></p>
 </div>
-<div id="section-3" class="section level4">
-<h4>4.</h4>
+<div id="linear-regression-model-with-bootstrapped-ses" class="section level4">
+<h4>4. Linear Regression Model with Bootstrapped SEs</h4>
 <pre class="r"><code>samp_distn&lt;-replicate(5000, {
   boot_dat&lt;-jasa[sample(nrow(jasa),replace=TRUE),]
   fit&lt;-lm(age~(reject+surgery+wait.t_c)^2, data=boot_dat) 
   coef(fit)})
 
 samp_distn%&gt;%t%&gt;%as.data.frame%&gt;%summarize_all(sd)</code></pre>
-<pre><code>##   (Intercept)   reject  surgery   wait.t_c reject:surgery reject:wait.t_c
-## 1     2.19526 2.455938 3.595523 0.04416914             NA      0.05244672
+<pre><code>##   (Intercept)   reject  surgery  wait.t_c reject:surgery reject:wait.t_c
+## 1    2.160543 2.384009 3.290138 0.0446724             NA       0.0534344
 ##   surgery:wait.t_c
 ## 1               NA</code></pre>
 <p><em>The SEs in this bootstrapped model increased from all the robust SEs. And different from the original SEs by increasing for the intercept, reject, wait.t_c, and reject:wait.t_c, and decreased for surgery.</em></p>
 </div>
-<div id="section-4" class="section level4">
-<h4>5.</h4>
-<p><em>Logistoc regression</em></p>
+<div id="logistic-regression-and-10-fold-cv" class="section level4">
+<h4>5. Logistic Regression and 10-Fold CV</h4>
+<pre class="r"><code>jasa$age_c&lt;-jasa$age-mean(jasa$age)
+jasa1&lt;-jasa %&gt;%mutate(survive=replace(survive, survive==1, &quot;dead&quot;),survive=replace(survive, survive==0, &quot;alive&quot;)) %&gt;% as.data.frame()
+
+data&lt;-jasa1%&gt;%mutate(y=ifelse(survive==&quot;dead&quot;,1,0))
+outcome&lt;-factor(data$survive,levels=c(&quot;dead&quot;,&quot;alive&quot;))
+
+fit1&lt;-glm(y~age_c+reject+surgery+wait.t_c, data=data,family=&quot;binomial&quot;)
+coeftest(fit1)</code></pre>
+<pre><code>## 
+## z test of coefficients:
+## 
+##                Estimate  Std. Error z value Pr(&gt;|z|)
+## (Intercept) -3.6834e-01  4.2842e-01 -0.8598   0.3899
+## age_c        3.9205e-02  3.8496e-02  1.0184   0.3085
+## reject       1.9826e+01  1.9698e+03  0.0101   0.9920
+## surgery     -7.7083e-01  9.1745e-01 -0.8402   0.4008
+## wait.t_c    -5.2316e-03  7.1092e-03 -0.7359   0.4618</code></pre>
+<pre class="r"><code>exp(coef(fit1))</code></pre>
+<pre><code>##  (Intercept)        age_c       reject      surgery     wait.t_c 
+## 6.918853e-01 1.039984e+00 4.075661e+08 4.626275e-01 9.947821e-01</code></pre>
+<pre class="r"><code>probs&lt;-predict(fit1,type=&quot;response&quot;)
+table(predict=as.numeric(probs&gt;.5),truth=data$y)%&gt;%addmargins</code></pre>
+<pre><code>##        truth
+## predict  0  1 Sum
+##     0   22 10  32
+##     1    2 31  33
+##     Sum 24 41  65</code></pre>
+<pre class="r"><code>class_diag&lt;-function(probs,truth){
+  if(is.numeric(truth)==FALSE &amp; is.logical(truth)==FALSE) truth&lt;-as.numeric(truth)-1
+  tab&lt;-table(factor(probs&gt;.5,levels=c(&quot;FALSE&quot;,&quot;TRUE&quot;)),truth)
+  prediction&lt;-ifelse(probs&gt;.5,1,0)
+  acc=mean(truth==prediction)
+  sens=mean(prediction[truth==1]==1)
+  spec=mean(prediction[truth==0]==0)
+  ppv=mean(truth[prediction==1]==1)
+  ord&lt;-order(probs, decreasing=TRUE)
+  probs &lt;- probs[ord]; truth &lt;- truth[ord]
+  TPR=cumsum(truth)/max(1,sum(truth)) 
+  FPR=cumsum(!truth)/max(1,sum(!truth))
+  dup&lt;-c(probs[-1]&gt;=probs[-length(probs)], FALSE)
+  TPR&lt;-c(0,TPR[!dup],1); FPR&lt;-c(0,FPR[!dup],1)
+  n &lt;- length(TPR)
+  auc&lt;- sum( ((TPR[-1]+TPR[-n])/2) * (FPR[-1]-FPR[-n]) )
+data.frame(acc,sens,spec,ppv,auc)}
+class_diag(probs,data$y)</code></pre>
+<pre><code>##         acc      sens      spec       ppv       auc
+## 1 0.8153846 0.7560976 0.9166667 0.9393939 0.8973577</code></pre>
+<pre class="r"><code>data$logit&lt;-predict(fit1,type=&quot;link&quot;)
+data%&gt;%ggplot()+geom_density(aes(logit,color=outcome,fill=outcome), alpha=.4)+
+  theme_classic()+geom_vline(xintercept=0)+xlab(&quot;logit (log-odds)&quot;)+
+  geom_rug(aes(logit,color=outcome))+
+  geom_text(x=-5,y=.07,label=&quot;TN = 31&quot;)+
+  geom_text(x=-1.75,y=.008,label=&quot;FN = 10&quot;)+
+  geom_text(x=1,y=.006,label=&quot;FP = 2&quot;)+
+  geom_text(x=5,y=.04,label=&quot;TP = 22&quot;)</code></pre>
+<p><img src="/proj2-2_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ROCplot&lt;-ggplot(data)+geom_roc(aes(d=y,m=probs), n.cuts=0)+theme_classic()
+ROCplot</code></pre>
+<p><img src="/proj2-2_files/figure-html/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>calc_auc(ROCplot)</code></pre>
+<pre><code>##   PANEL group       AUC
+## 1     1    -1 0.8973577</code></pre>
+<pre class="r"><code>set.seed(1234)
+k=10
+data1&lt;-data[sample(nrow(data)),] 
+folds&lt;-cut(seq(1:nrow(data)),breaks=k,labels=F) 
+diags&lt;-NULL
+for(i in 1:k){         
+  train&lt;-data[folds!=i,] 
+  test&lt;-data[folds==i,]  
+  truth&lt;-test$y
+  fit&lt;-glm(y~age_c+reject+surgery+wait.t_c,data=train,family=&quot;binomial&quot;)
+  probs&lt;-predict(fit,newdata = test,type=&quot;response&quot;)
+  diags&lt;-rbind(diags,class_diag(probs,truth)) }
+summarize_all(diags,mean) </code></pre>
+<pre><code>##         acc      sens spec       ppv       auc
+## 1 0.7642857 0.7571429  NaN 0.9016667 0.8583333</code></pre>
+<p><em>When a person is at the average age, the odds that they died is 1.03. When reject is 0 the odds that they died are 407566106. When surgery is 0 the odds that they died is -0.77. When a person has an average wait time the odds that they died is -0.005. There were 22 true positives, 31 true negatives, 2 false positives, and 10 false negatives. The AUC is 0.897 so it is a great tradeoff between sensitivity and specificity for my data. When you use a 10-fold CV it goes down to 0.858, so there is evidence of overfitting. The average out-of-sample accuracy is 0.814, the sensitivity is 0.755, and the recall is 0.925.</em></p>
 </div>
-<div id="section-5" class="section level4">
-<h4>6.</h4>
-<p><em>Predict w LASSO</em></p>
-<p>###Sources
-<em>[1] John Crowley &amp; Marie Hu (1977) Covariance Analysis of Heart Transplant
+<div id="lasso-and-10-fold-cv" class="section level4">
+<h4>6. LASSO and 10-Fold CV</h4>
+<pre class="r"><code>set.seed(1234)
+y&lt;-as.matrix(data$y) #grab response
+x&lt;-model.matrix(y~age_c+reject+surgery+wait.t_c,data=data)[,-1]
+cv &lt;- cv.glmnet(x,y)
+cv&lt;-cv.glmnet(x,y,family=&quot;binomial&quot;)
+lasso&lt;-glmnet(x,y,family=&quot;binomial&quot;,lambda=cv$lambda.1se)
+coef(lasso)</code></pre>
+<pre><code>## 5 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
+##                    s0
+## (Intercept) -0.151940
+## age_c        .       
+## reject       1.811409
+## surgery      .       
+## wait.t_c     .</code></pre>
+<pre class="r"><code>set.seed(1234)
+k=10
+data &lt;- data%&gt;% sample_frac #put rows of dataset in random order
+folds &lt;- ntile(1:nrow(data),n=10) #create fold labels
+diags&lt;-NULL
+for(i in 1:k){
+train &lt;- data[folds!=i,] #create training set (all but fold i)
+test &lt;- data[folds==i,] #create test set (just fold i)
+truth &lt;- test$y #save truth labels from fold i
+fit &lt;- glm(y~reject,
+data=train, family=&quot;binomial&quot;)
+probs &lt;- predict(fit, newdata=test, type=&quot;response&quot;)
+diags&lt;-rbind(diags,class_diag(probs,truth))
+}
+diags%&gt;%summarize_all(mean)</code></pre>
+<pre><code>##         acc sens spec ppv   auc
+## 1 0.8142857 0.69    1   1 0.845</code></pre>
+<p><em>When I used a LASSO, the only variable maintained is reject which makes sense. If someone rejects their transplant they are more likely to die. When I ran a 10-fold CV with just reject the accuracy went up from 0.762 to 0.0814.</em></p>
+<p>###Sources</p>
+<p><em>[1] John Crowley &amp; Marie Hu (1977) Covariance Analysis of Heart Transplant
 Survival Data, Journal of the American Statistical Association, 72:357, 27-36</em>
 …</p>
 </div>

@@ -88,11 +88,29 @@ Follow the following steps:
     
     <item>
       <title>Project 2: Modeling, Testing, and Predicting</title>
-      <link>/project2-2/</link>
+      <link>/proj2-2/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/project2-2/</guid>
+      <guid>/proj2-2/</guid>
       <description>jasa&amp;lt;-survival::jasa jasa&amp;lt;-jasa%&amp;gt;%select(fustat,age,reject,surgery,accept.dt,tx.date,wait.time)%&amp;gt;% na.omit%&amp;gt;%mutate(survive=fustat)%&amp;gt;%select(-fustat) glimpse(jasa) ## Rows: 65 ## Columns: 7 ## $ age &amp;lt;dbl&amp;gt; 54.29706, 40.26283, 50.86927, 42.50240, 47.98084, 54.57358,… ## $ reject &amp;lt;dbl&amp;gt; 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0,… ## $ surgery &amp;lt;dbl&amp;gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,… ## $ accept.</description>
+    </item>
+    
+    <item>
+      <title>Project 2: Modeling, Testing, and Predicting</title>
+      <link>/proj2-2.knit/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/proj2-2.knit/</guid>
+      <description>jasa&amp;lt;-survival::jasa jasa&amp;lt;-jasa%&amp;gt;%select(fustat,age,reject,surgery,accept.dt,tx.date,wait.time)%&amp;gt;% na.omit%&amp;gt;%mutate(survive=fustat)%&amp;gt;%select(-fustat) glimpse(jasa) ## Rows: 65 ## Columns: 7 ## $ age &amp;lt;dbl&amp;gt; 54.29706, 40.26283, 50.86927, 42.50240, 47.98084, 54.5735... ## $ reject &amp;lt;dbl&amp;gt; 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, ... ## $ surgery &amp;lt;dbl&amp;gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ... ## $ accept.</description>
+    </item>
+    
+    <item>
+      <title>Project 2: Modeling, Testing, and Predicting</title>
+      <link>/proj2-2.utf8/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/proj2-2.utf8/</guid>
+      <description>jasa&amp;lt;-survival::jasa jasa&amp;lt;-jasa%&amp;gt;%select(fustat,age,reject,surgery,accept.dt,tx.date,wait.time)%&amp;gt;% na.omit%&amp;gt;%mutate(survive=fustat)%&amp;gt;%select(-fustat) glimpse(jasa) ## Rows: 65 ## Columns: 7 ## $ age &amp;lt;dbl&amp;gt; 54.29706, 40.26283, 50.86927, 42.50240, 47.98084, 54.5735... ## $ reject &amp;lt;dbl&amp;gt; 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, ... ## $ surgery &amp;lt;dbl&amp;gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ... ## $ accept.</description>
     </item>
     
   </channel>

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Alexandra Sears" />
+    <meta name="description" content="Describe your website">
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
+    <title>Project 2: Modeling, Testing, and Predicting</title>
+    <meta name="generator" content="Hugo 0.70.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,200bold,400old" />
+    
+    <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+    
+  </head>
+
+  <body>
+    <div id="wrap">
+
+      
+      <nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/"><i class="fa fa-home"></i></a>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+        <li><a href="/blog/">BLOG</a></li>
+        
+        <li><a href="/projects/">PROJECTS</a></li>
+        
+        <li><a href="/resume/">RESUME</a></li>
+        
+      
+      </ul>
+    </div>
+  </div>
+</nav>
+
+      
+      <div class="container">
+        <div class="blog-post">
+          <h3>
+            <strong><a href="/proj2-2.utf8/">Project 2: Modeling, Testing, and Predicting</a></strong>
+          </h3>
+        </div>
+        <div class="blog-title">
+          <h4>
+          January 1, 0001
+            &nbsp;&nbsp;
+            
+          </h4>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="blogpost">
+              <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">jasa<span style="color:#f92672">&lt;-</span>survival<span style="color:#f92672">::</span>jasa
+jasa<span style="color:#f92672">&lt;-</span>jasa<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">select</span>(fustat,age,reject,surgery,accept.dt,tx.date,wait.time)<span style="color:#f92672">%&gt;%</span>
+  na.omit<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">mutate</span>(survive<span style="color:#f92672">=</span>fustat)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">select</span>(<span style="color:#f92672">-</span>fustat)
+<span style="color:#a6e22e">glimpse</span>(jasa)
+</code></pre></div><pre><code>## Rows: 65
+## Columns: 7
+## $ age       &lt;dbl&gt; 54.29706, 40.26283, 50.86927, 42.50240, 47.98084, 54.5735...
+## $ reject    &lt;dbl&gt; 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, ...
+## $ surgery   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...
+## $ accept.dt &lt;date&gt; 1968-01-06, 1968-03-28, 1968-07-12, 1968-08-11, 1968-08-...
+## $ tx.date   &lt;date&gt; 1968-01-06, 1968-05-02, 1968-08-31, 1968-08-22, 1968-09-...
+## $ wait.time &lt;dbl&gt; 0, 35, 50, 11, 25, 16, 36, 27, 19, 17, 7, 11, 2, 82, 24, ...
+## $ survive   &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, ...
+</code></pre><h4 id="0-introduction">0. Introduction</h4>
+<p><em>The data set is the survival of patients on the waiting list for a Stanford heart transplant program in 1974 that was published by John Crowley &amp; Marie Hu[1].  Survive is if the patient survived with 1 being that they died. Age is the age of the patient in years. Reject is whether or not they rejected the transplant with 1 being they did. Surgery is if the had a prior bypass surgery with 1 being they did. accept.dt and tx.dt are the acceptance into the program and the date of the transplant respectively. wait.time is the time before the pateint had the transplant (which is just days between accept.dt and tx.date).There are 65 observations after removing the NAs.</em></p>
+<h4 id="1-manova-anova-post-hoc-t-tests">1. MANOVA, ANOVA, Post-Hoc t Tests</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">shapiro.test</span>(jasa<span style="color:#f92672">$</span>age)
+</code></pre></div><pre><code>## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  jasa$age
+## W = 0.93631, p-value = 0.002338
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">shapiro.test</span>(jasa<span style="color:#f92672">$</span>reject)
+</code></pre></div><pre><code>## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  jasa$reject
+## W = 0.63232, p-value = 1.738e-11
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">shapiro.test</span>(jasa<span style="color:#f92672">$</span>surgery)
+</code></pre></div><pre><code>## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  jasa$surgery
+## W = 0.47225, p-value = 6.437e-14
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">shapiro.test</span>(jasa<span style="color:#f92672">$</span>wait.time)
+</code></pre></div><pre><code>## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  jasa$wait.time
+## W = 0.63669, p-value = 2.071e-11
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">jasa<span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">select</span>(age,reject,surgery,wait.time)<span style="color:#f92672">%&gt;%</span>cor
+</code></pre></div><pre><code>##                   age     reject     surgery   wait.time
+## age        1.00000000  0.4289776 -0.02497560  0.01183281
+## reject     0.42897762  1.0000000 -0.18776413 -0.19880603
+## surgery   -0.02497560 -0.1877641  1.00000000  0.05814853
+## wait.time  0.01183281 -0.1988060  0.05814853  1.00000000
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">df<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">rmvnorm</span>(<span style="color:#ae81ff">1000</span>,mean<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">0</span>),sigma<span style="color:#f92672">=</span><span style="color:#a6e22e">matrix</span>(<span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">.5</span>,<span style="color:#ae81ff">.5</span>,<span style="color:#ae81ff">1</span>),ncol<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>,byrow<span style="color:#f92672">=</span>T))
+df<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">data.frame</span>(jasa)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">rename</span>(Y1<span style="color:#f92672">=</span>survive,Y2<span style="color:#f92672">=</span>age)
+p<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">ggplot</span>(df, <span style="color:#a6e22e">aes</span>(Y1,Y2))<span style="color:#f92672">+</span><span style="color:#a6e22e">theme_classic</span>()<span style="color:#f92672">+</span><span style="color:#a6e22e">xlim</span>(<span style="color:#ae81ff">-10</span>, <span style="color:#ae81ff">10</span>)<span style="color:#f92672">+</span><span style="color:#a6e22e">geom_point</span>(alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">.5</span>)<span style="color:#f92672">+</span><span style="color:#a6e22e">geom_density_2d</span>(h<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">+</span><span style="color:#a6e22e">coord_fixed</span>()
+<span style="color:#a6e22e">ggMarginal</span>(p,type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;density&#34;</span>,xparams <span style="color:#f92672">=</span> <span style="color:#a6e22e">list</span>(bw<span style="color:#f92672">=</span><span style="color:#ae81ff">.5</span>), yparams<span style="color:#f92672">=</span><span style="color:#a6e22e">list</span>(bw<span style="color:#f92672">=</span><span style="color:#ae81ff">.5</span>))
+</code></pre></div><p>\begin{center}\includegraphics{proj2-2_files/figure-latex/unnamed-chunk-2-1} \end{center}</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">ggplot</span>(jasa, <span style="color:#a6e22e">aes</span>(x <span style="color:#f92672">=</span> age, y <span style="color:#f92672">=</span> wait.time)) <span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">geom_point</span>(alpha <span style="color:#f92672">=</span> <span style="color:#ae81ff">.5</span>) <span style="color:#f92672">+</span> <span style="color:#a6e22e">geom_density_2d</span>(h<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>) <span style="color:#f92672">+</span> <span style="color:#a6e22e">coord_fixed</span>() <span style="color:#f92672">+</span> <span style="color:#a6e22e">facet_wrap</span>(<span style="color:#f92672">~</span>survive)<span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">scale_x_continuous</span>(breaks <span style="color:#f92672">=</span> <span style="color:#a6e22e">seq</span>(<span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">62</span>, by <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span>))<span style="color:#f92672">+</span><span style="color:#a6e22e">theme_classic</span>(base_size <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>)
+</code></pre></div><p>\begin{center}\includegraphics{proj2-2_files/figure-latex/unnamed-chunk-2-2} \end{center}</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">covmats<span style="color:#f92672">&lt;-</span>jasa<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">select</span>(survive,age,reject,surgery,wait.time)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">group_by</span>(survive)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">do</span>(covs<span style="color:#f92672">=</span><span style="color:#a6e22e">cov</span>(.[2<span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>]))
+<span style="color:#a6e22e">for</span>(i in <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">3</span>){<span style="color:#a6e22e">print</span>(<span style="color:#a6e22e">as.character</span>(covmats<span style="color:#f92672">$</span>survive[i])); <span style="color:#a6e22e">print</span>(covmats<span style="color:#f92672">$</span>covs[i])}
+</code></pre></div><pre><code>## [1] &quot;0&quot;
+## [[1]]
+##                  age reject    surgery  wait.time
+## age       83.8716976      0  0.6213681   86.27593
+## reject     0.0000000      0  0.0000000    0.00000
+## surgery    0.6213681      0  0.2155797   -2.23913
+## wait.time 86.2759277      0 -2.2391304 4777.73913
+## 
+## [1] &quot;1&quot;
+## [[1]]
+##                   age      reject     surgery   wait.time
+## age       65.51982685  1.24270713 -0.04675882   20.075196
+## reject     1.24270713  0.21219512 -0.01341463   -1.977439
+## surgery   -0.04675882 -0.01341463  0.10975610    1.667683
+## wait.time 20.07519574 -1.97743902  1.66768293 1181.230488
+## 
+## [1] NA
+## [[1]]
+## NULL
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">man1<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">manova</span>(<span style="color:#a6e22e">cbind</span>(age,reject,surgery,wait.time)<span style="color:#f92672">~</span>survive, data<span style="color:#f92672">=</span>jasa)
+<span style="color:#a6e22e">summary</span>(man1)
+</code></pre></div><pre><code>##           Df  Pillai approx F num Df den Df    Pr(&gt;F)    
+## survive    1 0.49649   14.791      4     60 1.826e-08 ***
+## Residuals 63                                             
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">summary.aov</span>(man1)
+</code></pre></div><pre><code>##  Response age :
+##             Df Sum Sq Mean Sq F value   Pr(&gt;F)   
+## survive      1  752.1  752.14  10.415 0.001985 **
+## Residuals   63 4549.8   72.22                    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+##  Response reject :
+##             Df Sum Sq Mean Sq F value  Pr(&gt;F)    
+## survive      1 7.5737  7.5737  56.215 2.7e-10 ***
+## Residuals   63 8.4878  0.1347                    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+##  Response surgery :
+##             Df Sum Sq Mean Sq F value  Pr(&gt;F)  
+## survive      1 0.4360 0.43604  2.9385 0.09141 .
+## Residuals   63 9.3486 0.14839                  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+##  Response wait.time :
+##             Df Sum Sq Mean Sq F value  Pr(&gt;F)  
+## survive      1   7898  7898.2  3.1666 0.07998 .
+## Residuals   63 157137  2494.2                  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">jasa<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">group_by</span>(survive)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarize</span>(<span style="color:#a6e22e">mean</span>(age),<span style="color:#a6e22e">mean</span>(reject))
+</code></pre></div><pre><code>## # A tibble: 2 x 3
+##   survive `mean(age)` `mean(reject)`
+##     &lt;dbl&gt;       &lt;dbl&gt;          &lt;dbl&gt;
+## 1       0        41.6          0    
+## 2       1        48.6          0.707
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">pairwise.t.test</span>(jasa<span style="color:#f92672">$</span>age, jasa<span style="color:#f92672">$</span>survive, p.adj <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;none&#34;</span>)
+</code></pre></div><pre><code>## 
+## 	Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  jasa$age and jasa$survive 
+## 
+##   0    
+## 1 0.002
+## 
+## P value adjustment method: none
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">pairwise.t.test</span>(jasa<span style="color:#f92672">$</span>reject, jasa<span style="color:#f92672">$</span>survive, p.adj <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;none&#34;</span>)
+</code></pre></div><pre><code>## 
+## 	Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  jasa$reject and jasa$survive 
+## 
+##   0      
+## 1 2.7e-10
+## 
+## P value adjustment method: none
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#ae81ff">1-.95</span><span style="color:#a6e22e">^</span>(<span style="color:#ae81ff">7</span>) <span style="color:#75715e">#error rate</span>
+</code></pre></div><pre><code>## [1] 0.3016627
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#ae81ff">0.05</span><span style="color:#f92672">/</span>(<span style="color:#ae81ff">7</span>) <span style="color:#75715e">#bonferroni corrections</span>
+</code></pre></div><pre><code>## [1] 0.007142857
+</code></pre><p><em>After performing the MANOVA to determine differences in survival with my dependent variables, the p value is less than 0.05, with an F value of 14.791 which means there are mean differences across the levels of survive (dead,1 or alive,0). When I performed univariate ANOVAs, I found that the mean differences that were significant occur across age and reject. I performed 1 MANOVA, 4 ANOVA, and 2 post hoc t tests. The probability of type I error unadjusted is 30.16627%. Adjusted according to Bonferroni correction it is 0.007142857. Age and reject are still significant after the correction. The significant differences in survival were age of the patient and if they rejected the transplant. Assumptions that were probably met were sample size because there are 65 observations, no extreme outliers, and no multicollinearity. Assumptions that were  not met are multivariate normality and homogeneity of (co)variances because they are not similar across the groups and multivariate normality of DVs.</em></p>
+<h4 id="2-randomization-test">2. Randomization Test</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">jasar<span style="color:#f92672">&lt;-</span>jasa<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">select</span>(survive,age)
+jasar<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">group_by</span>(survive)<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarize</span>(means<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(age))<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarize</span>(`mean_diff:`<span style="color:#f92672">=</span><span style="color:#a6e22e">diff</span>(means))
+</code></pre></div><pre><code>## # A tibble: 1 x 1
+##   `mean_diff:`
+##          &lt;dbl&gt;
+## 1         7.05
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">rand_dist<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">vector</span>()
+<span style="color:#a6e22e">for</span>(i in <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5000</span>){
+new<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">data.frame</span>(age<span style="color:#f92672">=</span><span style="color:#a6e22e">sample</span>(jasar<span style="color:#f92672">$</span>age),survive<span style="color:#f92672">=</span>jasa<span style="color:#f92672">$</span>survive)
+rand_dist[i]<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">mean</span>(new[new<span style="color:#f92672">$</span>survive<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>,]<span style="color:#f92672">$</span>age)<span style="color:#f92672">-</span>
+<span style="color:#a6e22e">mean</span>(new[new<span style="color:#f92672">$</span>survive<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>,]<span style="color:#f92672">$</span>age)}
+<span style="color:#a6e22e">hist</span>(rand_dist,main<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Survival by Age&#34;</span>,ylab<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Age&#34;</span>);<span style="color:#a6e22e">abline</span>(v <span style="color:#f92672">=</span> <span style="color:#ae81ff">7.0487</span>	,col<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;blue&#34;</span>); <span style="color:#a6e22e">abline</span>(v <span style="color:#f92672">=</span> <span style="color:#ae81ff">-7.0487</span>	,col<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;blue&#34;</span>)
+</code></pre></div><p>\begin{center}\includegraphics{proj2-2_files/figure-latex/unnamed-chunk-3-1} \end{center}</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">mean</span>(rand_dist<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">7.0487</span>	 <span style="color:#f92672">|</span> rand_dist<span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">-7.0487</span>	)
+</code></pre></div><pre><code>## [1] 0.0012
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">ggplot</span>(jasar,<span style="color:#a6e22e">aes</span>(age,fill<span style="color:#f92672">=</span>survive))<span style="color:#f92672">+</span><span style="color:#a6e22e">geom_histogram</span>(bins<span style="color:#f92672">=</span><span style="color:#ae81ff">6.5</span>)<span style="color:#f92672">+</span><span style="color:#a6e22e">facet_wrap</span>(<span style="color:#f92672">~</span>survive,ncol<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)<span style="color:#f92672">+</span><span style="color:#a6e22e">theme</span>(legend.position<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;none&#34;</span><span style="color:#f92672">+</span><span style="color:#a6e22e">theme_classic</span>())
+</code></pre></div><p>\begin{center}\includegraphics{proj2-2_files/figure-latex/unnamed-chunk-3-2} \end{center}</p>
+<p><em>I used a randomization test in which the null hypothesis was that mean age is the same for people that survived vs people that did not survive surgery. The alternate hypothesis is that the mean age is different for people that survived vs people that did not survive. The two-tailed p value is 0.0012 so we can reject the null hypothesis. This means the mean age is different for people that survived vs people that did not survive.</em></p>
+<h4 id="3-linear-regression-model">3. Linear Regression Model</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">jasa<span style="color:#f92672">$</span>wait.t_c<span style="color:#f92672">&lt;-</span>jasa<span style="color:#f92672">$</span>wait.time<span style="color:#f92672">-</span><span style="color:#a6e22e">mean</span>(jasa<span style="color:#f92672">$</span>wait.time)
+fit<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">lm</span>(age<span style="color:#f92672">~</span>(reject<span style="color:#f92672">+</span>surgery<span style="color:#f92672">+</span>wait.t_c)^2,data<span style="color:#f92672">=</span>jasa,family<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;binomial&#34;</span>)
+<span style="color:#a6e22e">summary</span>(fit) 
+</code></pre></div><pre><code>## 
+## Call:
+## lm(formula = age ~ (reject + surgery + wait.t_c)^2, data = jasa, 
+##     family = &quot;binomial&quot;)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -22.3021  -4.9398   0.2949   5.5796  15.4779 
+## 
+## Coefficients:
+##                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)      41.61966    1.63295  25.487  &lt; 2e-16 ***
+## reject            9.15935    2.37888   3.850 0.000297 ***
+## surgery           2.52725    3.50732   0.721 0.474073    
+## wait.t_c          0.01303    0.02448   0.532 0.596498    
+## reject:surgery   -5.16905    7.14623  -0.723 0.472387    
+## reject:wait.t_c  -0.01077    0.06020  -0.179 0.858633    
+## surgery:wait.t_c  0.04142    0.07543   0.549 0.585043    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 8.452 on 58 degrees of freedom
+## Multiple R-squared:  0.2186,	Adjusted R-squared:  0.1378 
+## F-statistic: 2.704 on 6 and 58 DF,  p-value: 0.02201
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">ggplot</span>(jasa, <span style="color:#a6e22e">aes</span>(x<span style="color:#f92672">=</span>wait.t_c, y<span style="color:#f92672">=</span>age,group<span style="color:#f92672">=</span>reject))<span style="color:#f92672">+</span><span style="color:#a6e22e">theme_classic</span>()<span style="color:#f92672">+</span><span style="color:#a6e22e">geom_point</span>(<span style="color:#a6e22e">aes</span>(color<span style="color:#f92672">=</span>reject))<span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">geom_smooth</span>(method<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;lm&#34;</span>,formula<span style="color:#f92672">=</span>y<span style="color:#f92672">~</span><span style="color:#ae81ff">1</span>,se<span style="color:#f92672">=</span>F,fullrange<span style="color:#f92672">=</span>T,<span style="color:#a6e22e">aes</span>(color<span style="color:#f92672">=</span>reject))<span style="color:#f92672">+</span>
+<span style="color:#a6e22e">theme</span>(legend.position<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">.9</span>,<span style="color:#ae81ff">.25</span>))<span style="color:#f92672">+</span><span style="color:#a6e22e">xlab</span>(<span style="color:#e6db74">&#34;Wait.t_c&#34;</span>)<span style="color:#f92672">+</span><span style="color:#a6e22e">ggtitle</span>(<span style="color:#e6db74">&#34;Linear Regression of Age with Wait Time and Rejection Status&#34;</span>)
+</code></pre></div><p>\begin{center}\includegraphics{proj2-2_files/figure-latex/unnamed-chunk-4-1} \end{center}</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#linear relationships</span>
+resids<span style="color:#f92672">&lt;-</span>fit<span style="color:#f92672">$</span>residuals
+fitvals<span style="color:#f92672">&lt;-</span>fit<span style="color:#f92672">$</span>fitted.values
+<span style="color:#a6e22e">ggplot</span>()<span style="color:#f92672">+</span><span style="color:#a6e22e">geom_point</span>(<span style="color:#a6e22e">aes</span>(fitvals,resids), color<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;blue&#34;</span>)<span style="color:#f92672">+</span><span style="color:#a6e22e">theme_classic</span>()
+</code></pre></div><p>\begin{center}\includegraphics{proj2-2_files/figure-latex/unnamed-chunk-4-2} \end{center}</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#normality </span>
+<span style="color:#a6e22e">shapiro.test</span>(resids)
+</code></pre></div><pre><code>## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  resids
+## W = 0.98402, p-value = 0.5657
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#75715e">#equal variance</span>
+<span style="color:#a6e22e">bptest</span>(fit)
+</code></pre></div><pre><code>## 
+## 	studentized Breusch-Pagan test
+## 
+## data:  fit
+## BP = 16.459, df = 6, p-value = 0.01149
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">coeftest</span>(fit, vcov <span style="color:#f92672">=</span> <span style="color:#a6e22e">vcovHC</span>(fit))[,<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#ae81ff">2</span>] 
+</code></pre></div><pre><code>##                     Estimate Std. Error
+## (Intercept)      41.61966319 2.17949239
+## reject            9.15935082 2.41279475
+## surgery           2.52724593 3.32884133
+## wait.t_c          0.01303268 0.01711262
+## reject:surgery   -5.16904959 5.15002485
+## reject:wait.t_c  -0.01076983 0.02790342
+## surgery:wait.t_c  0.04141895 0.07740921
+</code></pre><p><em>When reject and surgery are 0 and wait time is the average, age is 41.620 years old. When reject is 1, the age goes up by 9.160 years, when surgery is 1, the age goes up by 2.527 years, and when wait time is the average, age goes up by 0.013 years. When you compare reject to surgery, age goes down by 5.170 years. When you compare reject to average wait time, age goes down by 0.011 years. When you compare surgery to average wait time, age goes up by 0.041 years. Linearity looked to be supported. Normality was supported. Equal variance was rejected with the BP test so I corrected with robust SEs. The SEs increased for the intercept, reject, wait.t_c, and surgery:wait.t_c. They decreased for surgery, reject:surgery, and reject:wait.t_c. My model explains 21.86% of the variation in the outcome.</em></p>
+<h4 id="4-linear-regression-model-with-bootstrapped-ses">4. Linear Regression Model with Bootstrapped SEs</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">samp_distn<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">replicate</span>(<span style="color:#ae81ff">5000</span>, {
+  boot_dat<span style="color:#f92672">&lt;-</span>jasa<span style="color:#a6e22e">[sample</span>(<span style="color:#a6e22e">nrow</span>(jasa),replace<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>),]
+  fit<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">lm</span>(age<span style="color:#f92672">~</span>(reject<span style="color:#f92672">+</span>surgery<span style="color:#f92672">+</span>wait.t_c)^2, data<span style="color:#f92672">=</span>boot_dat) 
+  <span style="color:#a6e22e">coef</span>(fit)})
+
+samp_distn<span style="color:#f92672">%&gt;%</span>t<span style="color:#f92672">%&gt;%</span>as.data.frame<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarize_all</span>(sd)
+</code></pre></div><pre><code>##   (Intercept)   reject  surgery   wait.t_c reject:surgery reject:wait.t_c
+## 1    2.185032 2.405736 3.319769 0.04587252             NA      0.05481462
+##   surgery:wait.t_c
+## 1               NA
+</code></pre><p><em>The SEs in this bootstrapped model increased from all the robust SEs. And different from the original SEs by increasing for the intercept, reject, wait.t_c, and reject:wait.t_c, and decreased for surgery.</em></p>
+<h4 id="5-logistic-regression-and-10-fold-cv">5. Logistic Regression and 10-Fold CV</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">jasa<span style="color:#f92672">$</span>age_c<span style="color:#f92672">&lt;-</span>jasa<span style="color:#f92672">$</span>age<span style="color:#f92672">-</span><span style="color:#a6e22e">mean</span>(jasa<span style="color:#f92672">$</span>age)
+jasa1<span style="color:#f92672">&lt;-</span>jasa <span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">mutate</span>(survive<span style="color:#f92672">=</span><span style="color:#a6e22e">replace</span>(survive, survive<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#34;dead&#34;</span>),survive<span style="color:#f92672">=</span><span style="color:#a6e22e">replace</span>(survive, survive<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>, <span style="color:#e6db74">&#34;alive&#34;</span>)) <span style="color:#f92672">%&gt;%</span> <span style="color:#a6e22e">as.data.frame</span>()
+
+data<span style="color:#f92672">&lt;-</span>jasa1<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">mutate</span>(y<span style="color:#f92672">=</span><span style="color:#a6e22e">ifelse</span>(survive<span style="color:#f92672">==</span><span style="color:#e6db74">&#34;dead&#34;</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>))
+outcome<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">factor</span>(data<span style="color:#f92672">$</span>survive,levels<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;dead&#34;</span>,<span style="color:#e6db74">&#34;alive&#34;</span>))
+
+fit1<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">glm</span>(y<span style="color:#f92672">~</span>age_c<span style="color:#f92672">+</span>reject<span style="color:#f92672">+</span>surgery<span style="color:#f92672">+</span>wait.t_c, data<span style="color:#f92672">=</span>data,family<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;binomial&#34;</span>)
+<span style="color:#a6e22e">coeftest</span>(fit1)
+</code></pre></div><pre><code>## 
+## z test of coefficients:
+## 
+##                Estimate  Std. Error z value Pr(&gt;|z|)
+## (Intercept) -3.6834e-01  4.2842e-01 -0.8598   0.3899
+## age_c        3.9205e-02  3.8496e-02  1.0184   0.3085
+## reject       1.9826e+01  1.9698e+03  0.0101   0.9920
+## surgery     -7.7083e-01  9.1745e-01 -0.8402   0.4008
+## wait.t_c    -5.2316e-03  7.1092e-03 -0.7359   0.4618
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">exp</span>(<span style="color:#a6e22e">coef</span>(fit1))
+</code></pre></div><pre><code>##  (Intercept)        age_c       reject      surgery     wait.t_c 
+## 6.918853e-01 1.039984e+00 4.075661e+08 4.626275e-01 9.947821e-01
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">probs<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">predict</span>(fit1,type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;response&#34;</span>)
+<span style="color:#a6e22e">table</span>(predict<span style="color:#f92672">=</span><span style="color:#a6e22e">as.numeric</span>(probs<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">.5</span>),truth<span style="color:#f92672">=</span>data<span style="color:#f92672">$</span>y)<span style="color:#f92672">%&gt;%</span>addmargins
+</code></pre></div><pre><code>##        truth
+## predict  0  1 Sum
+##     0   22 10  32
+##     1    2 31  33
+##     Sum 24 41  65
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">class_diag<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">function</span>(probs,truth){
+  <span style="color:#a6e22e">if</span>(<span style="color:#a6e22e">is.numeric</span>(truth)<span style="color:#f92672">==</span><span style="color:#66d9ef">FALSE</span> <span style="color:#f92672">&amp;</span> <span style="color:#a6e22e">is.logical</span>(truth)<span style="color:#f92672">==</span><span style="color:#66d9ef">FALSE</span>) truth<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">as.numeric</span>(truth)<span style="color:#ae81ff">-1</span>
+  tab<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">table</span>(<span style="color:#a6e22e">factor</span>(probs<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">.5</span>,levels<span style="color:#f92672">=</span><span style="color:#a6e22e">c</span>(<span style="color:#e6db74">&#34;FALSE&#34;</span>,<span style="color:#e6db74">&#34;TRUE&#34;</span>)),truth)
+  prediction<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">ifelse</span>(probs<span style="color:#f92672">&gt;</span><span style="color:#ae81ff">.5</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">0</span>)
+  acc<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(truth<span style="color:#f92672">==</span>prediction)
+  sens<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(prediction[truth<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>)
+  spec<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(prediction[truth<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>]<span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>)
+  ppv<span style="color:#f92672">=</span><span style="color:#a6e22e">mean</span>(truth[prediction<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">==</span><span style="color:#ae81ff">1</span>)
+  ord<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">order</span>(probs, decreasing<span style="color:#f92672">=</span><span style="color:#66d9ef">TRUE</span>)
+  probs <span style="color:#f92672">&lt;-</span> probs[ord]; truth <span style="color:#f92672">&lt;-</span> truth[ord]
+  TPR<span style="color:#f92672">=</span><span style="color:#a6e22e">cumsum</span>(truth)<span style="color:#f92672">/</span><span style="color:#a6e22e">max</span>(<span style="color:#ae81ff">1</span>,<span style="color:#a6e22e">sum</span>(truth)) 
+  FPR<span style="color:#f92672">=</span><span style="color:#a6e22e">cumsum</span>(<span style="color:#f92672">!</span>truth)<span style="color:#f92672">/</span><span style="color:#a6e22e">max</span>(<span style="color:#ae81ff">1</span>,<span style="color:#a6e22e">sum</span>(<span style="color:#f92672">!</span>truth))
+  dup<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">c</span>(probs[<span style="color:#ae81ff">-1</span>]<span style="color:#f92672">&gt;=</span>probs[<span style="color:#f92672">-</span><span style="color:#a6e22e">length</span>(probs)], <span style="color:#66d9ef">FALSE</span>)
+  TPR<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">0</span>,TPR[<span style="color:#f92672">!</span>dup],<span style="color:#ae81ff">1</span>); FPR<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">c</span>(<span style="color:#ae81ff">0</span>,FPR[<span style="color:#f92672">!</span>dup],<span style="color:#ae81ff">1</span>)
+  n <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">length</span>(TPR)
+  auc<span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">sum</span>( ((TPR[<span style="color:#ae81ff">-1</span>]<span style="color:#f92672">+</span>TPR[<span style="color:#f92672">-</span>n])<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>) <span style="color:#f92672">*</span> (FPR[<span style="color:#ae81ff">-1</span>]<span style="color:#f92672">-</span>FPR[<span style="color:#f92672">-</span>n]) )
+<span style="color:#a6e22e">data.frame</span>(acc,sens,spec,ppv,auc)}
+<span style="color:#a6e22e">class_diag</span>(probs,data<span style="color:#f92672">$</span>y)
+</code></pre></div><pre><code>##         acc      sens      spec       ppv       auc
+## 1 0.8153846 0.7560976 0.9166667 0.9393939 0.8973577
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">data<span style="color:#f92672">$</span>logit<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">predict</span>(fit1,type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;link&#34;</span>)
+data<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">ggplot</span>()<span style="color:#f92672">+</span><span style="color:#a6e22e">geom_density</span>(<span style="color:#a6e22e">aes</span>(logit,color<span style="color:#f92672">=</span>outcome,fill<span style="color:#f92672">=</span>outcome), alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">.4</span>)<span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">theme_classic</span>()<span style="color:#f92672">+</span><span style="color:#a6e22e">geom_vline</span>(xintercept<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>)<span style="color:#f92672">+</span><span style="color:#a6e22e">xlab</span>(<span style="color:#e6db74">&#34;logit (log-odds)&#34;</span>)<span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">geom_rug</span>(<span style="color:#a6e22e">aes</span>(logit,color<span style="color:#f92672">=</span>outcome))<span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">geom_text</span>(x<span style="color:#f92672">=</span><span style="color:#ae81ff">-5</span>,y<span style="color:#f92672">=</span><span style="color:#ae81ff">.07</span>,label<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;TN = 31&#34;</span>)<span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">geom_text</span>(x<span style="color:#f92672">=</span><span style="color:#ae81ff">-1.75</span>,y<span style="color:#f92672">=</span><span style="color:#ae81ff">.008</span>,label<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;FN = 10&#34;</span>)<span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">geom_text</span>(x<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>,y<span style="color:#f92672">=</span><span style="color:#ae81ff">.006</span>,label<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;FP = 2&#34;</span>)<span style="color:#f92672">+</span>
+  <span style="color:#a6e22e">geom_text</span>(x<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span>,y<span style="color:#f92672">=</span><span style="color:#ae81ff">.04</span>,label<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;TP = 22&#34;</span>)
+</code></pre></div><p>\begin{center}\includegraphics{proj2-2_files/figure-latex/unnamed-chunk-6-1} \end{center}</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r">ROCplot<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">ggplot</span>(data)<span style="color:#f92672">+</span><span style="color:#a6e22e">geom_roc</span>(<span style="color:#a6e22e">aes</span>(d<span style="color:#f92672">=</span>y,m<span style="color:#f92672">=</span>probs), n.cuts<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>)<span style="color:#f92672">+</span><span style="color:#a6e22e">theme_classic</span>()
+ROCplot
+</code></pre></div><p>\begin{center}\includegraphics{proj2-2_files/figure-latex/unnamed-chunk-6-2} \end{center}</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">calc_auc</span>(ROCplot)
+</code></pre></div><pre><code>##   PANEL group       AUC
+## 1     1    -1 0.8973577
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">set.seed</span>(<span style="color:#ae81ff">1234</span>)
+k<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>
+data1<span style="color:#f92672">&lt;-</span>data<span style="color:#a6e22e">[sample</span>(<span style="color:#a6e22e">nrow</span>(data)),] 
+folds<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">cut</span>(<span style="color:#a6e22e">seq</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#a6e22e">nrow</span>(data)),breaks<span style="color:#f92672">=</span>k,labels<span style="color:#f92672">=</span>F) 
+diags<span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">NULL</span>
+<span style="color:#a6e22e">for</span>(i in <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>k){         
+  train<span style="color:#f92672">&lt;-</span>data[folds<span style="color:#f92672">!=</span>i,] 
+  test<span style="color:#f92672">&lt;-</span>data[folds<span style="color:#f92672">==</span>i,]  
+  truth<span style="color:#f92672">&lt;-</span>test<span style="color:#f92672">$</span>y
+  fit<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">glm</span>(y<span style="color:#f92672">~</span>age_c<span style="color:#f92672">+</span>reject<span style="color:#f92672">+</span>surgery<span style="color:#f92672">+</span>wait.t_c,data<span style="color:#f92672">=</span>train,family<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;binomial&#34;</span>)
+  probs<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">predict</span>(fit,newdata <span style="color:#f92672">=</span> test,type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;response&#34;</span>)
+  diags<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">rbind</span>(diags,<span style="color:#a6e22e">class_diag</span>(probs,truth)) }
+<span style="color:#a6e22e">summarize_all</span>(diags,mean) 
+</code></pre></div><pre><code>##         acc      sens spec       ppv       auc
+## 1 0.7642857 0.7571429  NaN 0.9016667 0.8583333
+</code></pre><p><em>When a person is at the average age, the odds that they died is 1.03. When reject is 0 the odds that they died are 407566106. When surgery is 0 the odds that they died is -0.77. When a person has an average wait time the odds that they died is -0.005. There were 22 true positives, 31 true negatives, 2 false positives, and 10 false negatives. The AUC is 0.897 so it is a great tradeoff between sensitivity and specificity for my data. When you use a 10-fold CV it goes down to 0.858, so there is evidence of overfitting. The average out-of-sample accuracy is 0.814, the sensitivity is 0.755, and the recall is 0.925.</em></p>
+<h4 id="6-lasso-and-10-fold-cv">6. LASSO and 10-Fold CV</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">set.seed</span>(<span style="color:#ae81ff">1234</span>)
+y<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">as.matrix</span>(data<span style="color:#f92672">$</span>y) <span style="color:#75715e">#grab response</span>
+x<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">model.matrix</span>(y<span style="color:#f92672">~</span>age_c<span style="color:#f92672">+</span>reject<span style="color:#f92672">+</span>surgery<span style="color:#f92672">+</span>wait.t_c,data<span style="color:#f92672">=</span>data)[,<span style="color:#ae81ff">-1</span>]
+cv <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">cv.glmnet</span>(x,y)
+cv<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">cv.glmnet</span>(x,y,family<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;binomial&#34;</span>)
+lasso<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">glmnet</span>(x,y,family<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;binomial&#34;</span>,lambda<span style="color:#f92672">=</span>cv<span style="color:#f92672">$</span>lambda.1se)
+<span style="color:#a6e22e">coef</span>(lasso)
+</code></pre></div><pre><code>## 5 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
+##                    s0
+## (Intercept) -0.151940
+## age_c        .       
+## reject       1.811409
+## surgery      .       
+## wait.t_c     .
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-r" data-lang="r"><span style="color:#a6e22e">set.seed</span>(<span style="color:#ae81ff">1234</span>)
+k<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>
+data <span style="color:#f92672">&lt;-</span> data<span style="color:#f92672">%&gt;%</span> sample_frac <span style="color:#75715e">#put rows of dataset in random order</span>
+folds <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">ntile</span>(<span style="color:#ae81ff">1</span><span style="color:#f92672">:</span><span style="color:#a6e22e">nrow</span>(data),n<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>) <span style="color:#75715e">#create fold labels</span>
+diags<span style="color:#f92672">&lt;-</span><span style="color:#66d9ef">NULL</span>
+<span style="color:#a6e22e">for</span>(i in <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>k){
+train <span style="color:#f92672">&lt;-</span> data[folds<span style="color:#f92672">!=</span>i,] <span style="color:#75715e">#create training set (all but fold i)</span>
+test <span style="color:#f92672">&lt;-</span> data[folds<span style="color:#f92672">==</span>i,] <span style="color:#75715e">#create test set (just fold i)</span>
+truth <span style="color:#f92672">&lt;-</span> test<span style="color:#f92672">$</span>y <span style="color:#75715e">#save truth labels from fold i</span>
+fit <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">glm</span>(y<span style="color:#f92672">~</span>reject,
+data<span style="color:#f92672">=</span>train, family<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;binomial&#34;</span>)
+probs <span style="color:#f92672">&lt;-</span> <span style="color:#a6e22e">predict</span>(fit, newdata<span style="color:#f92672">=</span>test, type<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;response&#34;</span>)
+diags<span style="color:#f92672">&lt;-</span><span style="color:#a6e22e">rbind</span>(diags,<span style="color:#a6e22e">class_diag</span>(probs,truth))
+}
+diags<span style="color:#f92672">%&gt;%</span><span style="color:#a6e22e">summarize_all</span>(mean)
+</code></pre></div><pre><code>##         acc sens spec ppv   auc
+## 1 0.8142857 0.69    1   1 0.845
+</code></pre><p><em>When I used a LASSO, the only variable maintained is reject which makes sense. If someone rejects their transplant they are more likely to die. When I ran a 10-fold CV with just reject the accuracy went up from 0.762 to 0.0814.</em></p>
+<p>###Sources</p>
+<p><em>[1] John Crowley &amp; Marie Hu (1977) Covariance Analysis of Heart Transplant
+Survival Data, Journal of the American Statistical Association, 72:357, 27-36</em>
+&hellip;</p>
+
+              <hr>
+              <div class="related-posts">
+                <h5>Related Posts</h5>
+                
+              </div>
+            </div>
+          </div>
+          <hr>
+        <div class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+        </div>
+      </div>
+      
+    </div>
+
+    
+    <footer>
+  <div id="footer">
+    <div class="container">
+      <p class="text-muted">&copy; All rights reserved. Powered by <a href="https://gohugo.io/">Hugo</a> and
+      <a href="http://www.github.com/nurlansu/hugo-sustain/">sustain</a> with ♥</p>
+    </div>
+  </div>
+</footer>
+<div class="footer"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/docs.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script src="/js/ie10-viewport-bug-workaround.js"></script>
+
+
+    
+  </body>
+</html>
