@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1588807048699.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "582032038",
+    "id" : "1E9093B7",
+    "lastKnownWriteTime" : 1588807169,
+    "last_content_update" : 1588807169804,
+    "path" : "~/Desktop/web/content/blog/creating-a-new-theme.md",
+    "project_path" : "content/blog/creating-a-new-theme.md",
+    "properties" : {
+        "cursorPosition" : "29,0",
+        "scrollLine" : "7"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "markdown"
+}
