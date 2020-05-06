@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Final Project</title>
+    <link>/</link>
+    <description>Recent content on Final Project</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <lastBuildDate>Sun, 02 Oct 2016 22:55:05 -0400</lastBuildDate>
+    
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Projects</title>
+      <link>/projects/</link>
+      <pubDate>Sun, 02 Oct 2016 22:55:05 -0400</pubDate>
+      
+      <guid>/projects/</guid>
+      <description>Projects Here are some projects I have recently completed:
+ Exploratory Data Analysis Modeling, Testing, and Predicting  </description>
+    </item>
+    
+    <item>
+      <title>Hello R Markdown</title>
+      <link>/blog/2015-07-23-r-rmarkdown/</link>
+      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      
+      <guid>/blog/2015-07-23-r-rmarkdown/</guid>
+      <description>R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
+You can embed an R code chunk like this:
+summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.</description>
+    </item>
+    
+    <item>
+      <title>Creating a New Theme</title>
+      <link>/blog/creating-a-new-theme/</link>
+      <pubDate>Sun, 28 Sep 2014 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/creating-a-new-theme/</guid>
+      <description>Introduction This tutorial will show you how to create a simple theme in Hugo. I assume that you are familiar with HTML, the bash command line, and that you are comfortable using Markdown to format content. I&amp;rsquo;ll explain how Hugo uses templates and how you can organize your templates to create a theme. I won&amp;rsquo;t cover using CSS to style your theme.
+We&amp;rsquo;ll start with creating a new site with a very basic template.</description>
+    </item>
+    
+    <item>
+      <title>(Hu)go Template Primer</title>
+      <link>/blog/goisforlovers/</link>
+      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/goisforlovers/</guid>
+      <description>Hugo uses the excellent go html/template library for its template engine. It is an extremely lightweight engine that provides a very small amount of logic. In our experience that it is just the right amount of logic to be able to create a good static website. If you have used other template systems from different languages or frameworks you will find a lot of similarities in go templates.
+This document is a brief primer on using go templates.</description>
+    </item>
+    
+    <item>
+      <title>Getting Started with Hugo</title>
+      <link>/blog/hugoisforlovers/</link>
+      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/hugoisforlovers/</guid>
+      <description>Step 1. Install Hugo Goto hugo releases and download the appropriate version for your os and architecture.
+Save it somewhere specific as we will be using it in the next step.
+More complete instructions are available at installing hugo
+Step 2. Build the Docs Hugo has its own example site which happens to also be the documentation site you are reading right now.
+Follow the following steps:
+ Clone the hugo repository Go into the repo Run hugo in server mode and build the docs Open your browser to http://localhost:1313  Corresponding pseudo commands:</description>
+    </item>
+    
+    <item>
+      <title>Migrate to Hugo from Jekyll</title>
+      <link>/blog/migrate-from-jekyll/</link>
+      <pubDate>Mon, 10 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/migrate-from-jekyll/</guid>
+      <description>Move static content to static Jekyll has a rule that any directory not starting with _ will be copied as-is to the _site output. Hugo keeps all static content under static. You should therefore move it all there. With Jekyll, something that looked like
+▾ &amp;lt;root&amp;gt;/ ▾ images/ logo.png  should become
+▾ &amp;lt;root&amp;gt;/ ▾ static/ ▾ images/ logo.png  Additionally, you&amp;rsquo;ll want any files that should reside at the root (such as CNAME) to be moved to static.</description>
+    </item>
+    
+    <item>
+      <title>Project 1: Exploratory Data Analysis</title>
+      <link>/project1-1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/project1-1/</guid>
+      <description>exercise2015&amp;lt;-read_csv(&amp;quot;week16_exercise.csv&amp;quot;) crime2015&amp;lt;-read_csv(&amp;quot;table5.csv&amp;quot;) #data sets library(ggplot2) crime2015 &amp;lt;- na.omit(crime2015) glimpse(crime2015) ## Rows: 52 ## Columns: 12 ## $ State &amp;lt;chr&amp;gt; &amp;quot;Alabama&amp;quot;, &amp;quot;Alaska&amp;quot;, &amp;quot;Arizona&amp;quot;, &amp;quot;Arkansas&amp;quot;, &amp;quot;Cali… ## $ Population &amp;lt;dbl&amp;gt; 4858979, 738432, 6828065, 2978204, 39144818, 5456… ## $ Violent_crime &amp;lt;dbl&amp;gt; 22952, 5392, 28012, 15526, 166883, 17515, 7845, 4… ## $ Murder_manslaughter &amp;lt;dbl&amp;gt; 348, 59, 309, 181, 1861, 176, 117, 63, 162, 1041,… ## $ Rape_revdef &amp;lt;dbl&amp;gt; 2039, 901, 3108, 1931, 12811, 3257, 773, 341, 494… ## $ Rape_legdef &amp;lt;dbl&amp;gt; 1456, 650, 2294, 1300, 9387, 2377, 582, 243, 366,… ## $ Robbery &amp;lt;dbl&amp;gt; 4611, 761, 6360, 2098, 52862, 3323, 2892, 1235, 3… ## $ Aggravated_assault &amp;lt;dbl&amp;gt; 15954, 3671, 18235, 11316, 99349, 10759, 4063, 30… ## $ Property_crime &amp;lt;dbl&amp;gt; 144746, 20806, 207107, 96836, 1024914, 144136, 65… ## $ Burglary &amp;lt;dbl&amp;gt; 35255, 3511, 37957, 22640, 197404, 23454, 10053, … ## $ Larceny_theft &amp;lt;dbl&amp;gt; 99156, 15249, 152365, 68424, 656517, 104682, 4867… ## $ Car_theft &amp;lt;dbl&amp;gt; 10335, 2046, 16785, 5772, 170993, 16000, 6338, 11… exercise2015&amp;lt;- exercise2015 glimpse(exercise2015) ## Rows: 52 ## Columns: 9 ## $ count &amp;lt;dbl&amp;gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1… ## $ state &amp;lt;chr&amp;gt; &amp;quot;All states (average)&amp;quot;, &amp;quot;Alabama&amp;quot;, &amp;quot;Alaska&amp;quot;, &amp;quot;Arizon… ## $ adults &amp;lt;dbl&amp;gt; 22, 19, 27, 26, 15, 24, 32, 24, 20, 30, 21, 20, 24, … ## $ men &amp;lt;dbl&amp;gt; 27, 24, 33, 29, 19, 28, 33, 28, 24, 40, 27, 27, 31, … ## $ women &amp;lt;dbl&amp;gt; 18, 14, 23, 23, 11, 19, 31, 21, 15, 22, 15, 14, 18, … ## $ men_working &amp;lt;dbl&amp;gt; 28, 25, 31, 31, 21, 29, 34, 29, 23, 40, 27, 29, 32, … ## $ women_working &amp;lt;dbl&amp;gt; 20, 15, 24, 26, 13, 21, 33, 24, 17, 24, 17, 15, 19, … ## $ men_nonworking &amp;lt;dbl&amp;gt; 21, 23, 33, 22, 14, 24, 26, 22, 25, 43, 25, 21, 25, … ## $ women_nonworking &amp;lt;dbl&amp;gt; 14, 13, 17, 16, 9, 15, 27, 13, 11, 18, 12, 12, 14, 2… Introduction I got one data set from the FBI website on violent crimes by state, https://ucr.</description>
+    </item>
+    
+    <item>
+      <title>Project 2: Modeling, Testing, and Predicting</title>
+      <link>/project2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/project2/</guid>
+      <description>jasa&amp;lt;-survival::jasa jasa&amp;lt;-jasa%&amp;gt;%select(fustat,age,reject,surgery,accept.dt,tx.date,wait.time)%&amp;gt;% na.omit%&amp;gt;%mutate(survive=fustat)%&amp;gt;%select(-fustat) glimpse(jasa) ## Rows: 65 ## Columns: 7 ## $ age &amp;lt;dbl&amp;gt; 54.29706, 40.26283, 50.86927, 42.50240, 47.98084, 54.57358,… ## $ reject &amp;lt;dbl&amp;gt; 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0,… ## $ surgery &amp;lt;dbl&amp;gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,… ## $ accept.</description>
+    </item>
+    
+  </channel>
+</rss>

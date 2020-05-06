@@ -1,0 +1,229 @@
+---
+title: 'Project 2: Modeling, Testing, and Predicting'
+author: "Alexandra Sears"
+date: "4/1/2020"
+output:
+  html_document:
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+  word_document:
+    toc: no
+  pdf_document:
+    toc: no
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, fig.align = "center", warning = F, message = F,
+tidy=TRUE, tidy.opts=list(width.cutoff=60), R.options=list(max.print=100))
+library(knitr);library(mvtnorm)
+library(kableExtra);library(tidyverse)
+library(cluster);library(plotly)
+library(GGally);library(ggplot2)
+library(ggExtra);library(glmnet)
+library(sandwich);library(lmtest)
+library(ggpubr);library(broom)
+library(plotROC);library(pROC)
+
+```
+
+```{r}
+jasa<-survival::jasa
+jasa<-jasa%>%select(fustat,age,reject,surgery,accept.dt,tx.date,wait.time)%>%
+  na.omit%>%mutate(survive=fustat)%>%select(-fustat)
+glimpse(jasa)
+```
+
+#### 0. Introduction
+
+*The data set is the survival of patients on the waiting list for a Stanford heart transplant program in 1974 that was published by John Crowley & Marie Hu[1].  Survive is if the patient survived with 1 being that they died. Age is the age of the patient in years. Reject is whether or not they rejected the transplant with 1 being they did. Surgery is if the had a prior bypass surgery with 1 being they did. accept.dt and tx.dt are the acceptance into the program and the date of the transplant respectively. wait.time is the time before the pateint had the transplant (which is just days between accept.dt and tx.date).There are 65 observations after removing the NAs.*
+
+#### 1. MANOVA, ANOVA, Post-Hoc t Tests
+
+```{R}
+shapiro.test(jasa$age)
+shapiro.test(jasa$reject)
+shapiro.test(jasa$surgery)
+shapiro.test(jasa$wait.time)
+jasa%>% select(age,reject,surgery,wait.time)%>%cor
+df<-rmvnorm(1000,mean=c(0,0),sigma=matrix(c(1,.5,.5,1),ncol=2,byrow=T))
+df<-data.frame(jasa)%>%rename(Y1=survive,Y2=age)
+p<-ggplot(df, aes(Y1,Y2))+theme_classic()+xlim(-10, 10)+geom_point(alpha=.5)+geom_density_2d(h=2)+coord_fixed()
+ggMarginal(p,type="density",xparams = list(bw=.5), yparams=list(bw=.5))
+ggplot(jasa, aes(x = age, y = wait.time)) +
+  geom_point(alpha = .5) + geom_density_2d(h=2) + coord_fixed() + facet_wrap(~survive)+
+  scale_x_continuous(breaks = seq(20, 62, by = 20))+theme_classic(base_size = 10)
+
+
+covmats<-jasa%>%select(survive,age,reject,surgery,wait.time)%>%group_by(survive)%>%do(covs=cov(.[2:5]))
+for(i in 1:3){print(as.character(covmats$survive[i])); print(covmats$covs[i])}
+
+man1<-manova(cbind(age,reject,surgery,wait.time)~survive, data=jasa)
+summary(man1)
+summary.aov(man1)
+jasa%>%group_by(survive)%>%summarize(mean(age),mean(reject))
+
+pairwise.t.test(jasa$age, jasa$survive, p.adj = "none")
+pairwise.t.test(jasa$reject, jasa$survive, p.adj = "none")
+1-.95^(7) #error rate
+0.05/(7) #bonferroni corrections
+```
+
+*After performing the MANOVA to determine differences in survival with my dependent variables, the p value is less than 0.05, with an F value of 14.791 which means there are mean differences across the levels of survive (dead,1 or alive,0). When I performed univariate ANOVAs, I found that the mean differences that were significant occur across age and reject. I performed 1 MANOVA, 4 ANOVA, and 2 post hoc t tests. The probability of type I error unadjusted is 30.16627%. Adjusted according to Bonferroni correction it is 0.007142857. Age and reject are still significant after the correction. The significant differences in survival were age of the patient and if they rejected the transplant. Assumptions that were probably met were sample size because there are 65 observations, no extreme outliers, and no multicollinearity. Assumptions that were  not met are multivariate normality and homogeneity of (co)variances because they are not similar across the groups and multivariate normality of DVs.*
+
+#### 2. Randomization Test
+
+```{r}
+jasar<-jasa%>%select(survive,age)
+jasar%>%group_by(survive)%>%summarize(means=mean(age))%>%summarize(`mean_diff:`=diff(means))
+rand_dist<-vector()
+for(i in 1:5000){
+new<-data.frame(age=sample(jasar$age),survive=jasa$survive)
+rand_dist[i]<-mean(new[new$survive==1,]$age)-
+mean(new[new$survive==0,]$age)}
+hist(rand_dist,main="Survival by Age",ylab="Age");abline(v = 7.0487	,col="blue"); abline(v = -7.0487	,col="blue")
+mean(rand_dist>7.0487	 | rand_dist< -7.0487	)
+ggplot(jasar,aes(age,fill=survive))+geom_histogram(bins=6.5)+facet_wrap(~survive,ncol=2)+theme(legend.position="none"+theme_classic())
+```
+
+*I used a randomization test in which the null hypothesis was that mean age is the same for people that survived vs people that did not survive surgery. The alternate hypothesis is that the mean age is different for people that survived vs people that did not survive. The two-tailed p value is 0.0012 so we can reject the null hypothesis. This means the mean age is different for people that survived vs people that did not survive.*
+
+#### 3. Linear Regression Model
+
+```{r}
+jasa$wait.t_c<-jasa$wait.time-mean(jasa$wait.time)
+fit<-lm(age~(reject+surgery+wait.t_c)^2,data=jasa,family="binomial")
+summary(fit) 
+
+
+ggplot(jasa, aes(x=wait.t_c, y=age,group=reject))+theme_classic()+geom_point(aes(color=reject))+
+  geom_smooth(method="lm",formula=y~1,se=F,fullrange=T,aes(color=reject))+
+theme(legend.position=c(.9,.25))+xlab("Wait.t_c")+ggtitle("Linear Regression of Age with Wait Time and Rejection Status")
+
+#linear relationships
+resids<-fit$residuals
+fitvals<-fit$fitted.values
+ggplot()+geom_point(aes(fitvals,resids), color="blue")+theme_classic()
+#normality 
+shapiro.test(resids)
+#equal variance
+bptest(fit)
+coeftest(fit, vcov = vcovHC(fit))[,1:2] 
+```
+
+*When reject and surgery are 0 and wait time is the average, age is 41.620 years old. When reject is 1, the age goes up by 9.160 years, when surgery is 1, the age goes up by 2.527 years, and when wait time is the average, age goes up by 0.013 years. When you compare reject to surgery, age goes down by 5.170 years. When you compare reject to average wait time, age goes down by 0.011 years. When you compare surgery to average wait time, age goes up by 0.041 years. Linearity looked to be supported. Normality was supported. Equal variance was rejected with the BP test so I corrected with robust SEs. The SEs increased for the intercept, reject, wait.t_c, and surgery:wait.t_c. They decreased for surgery, reject:surgery, and reject:wait.t_c. My model explains 21.86% of the variation in the outcome.*
+
+#### 4. Linear Regression Model with Bootstrapped SEs
+
+```{r}
+samp_distn<-replicate(5000, {
+  boot_dat<-jasa[sample(nrow(jasa),replace=TRUE),]
+  fit<-lm(age~(reject+surgery+wait.t_c)^2, data=boot_dat) 
+  coef(fit)})
+
+samp_distn%>%t%>%as.data.frame%>%summarize_all(sd)
+```
+
+*The SEs in this bootstrapped model increased from all the robust SEs. And different from the original SEs by increasing for the intercept, reject, wait.t_c, and reject:wait.t_c, and decreased for surgery.*
+
+#### 5. Logistic Regression and 10-Fold CV
+
+```{r}
+jasa$age_c<-jasa$age-mean(jasa$age)
+jasa1<-jasa %>%mutate(survive=replace(survive, survive==1, "dead"),survive=replace(survive, survive==0, "alive")) %>% as.data.frame()
+
+data<-jasa1%>%mutate(y=ifelse(survive=="dead",1,0))
+outcome<-factor(data$survive,levels=c("dead","alive"))
+
+fit1<-glm(y~age_c+reject+surgery+wait.t_c, data=data,family="binomial")
+coeftest(fit1)
+exp(coef(fit1))
+probs<-predict(fit1,type="response")
+table(predict=as.numeric(probs>.5),truth=data$y)%>%addmargins
+
+
+class_diag<-function(probs,truth){
+  if(is.numeric(truth)==FALSE & is.logical(truth)==FALSE) truth<-as.numeric(truth)-1
+  tab<-table(factor(probs>.5,levels=c("FALSE","TRUE")),truth)
+  prediction<-ifelse(probs>.5,1,0)
+  acc=mean(truth==prediction)
+  sens=mean(prediction[truth==1]==1)
+  spec=mean(prediction[truth==0]==0)
+  ppv=mean(truth[prediction==1]==1)
+  ord<-order(probs, decreasing=TRUE)
+  probs <- probs[ord]; truth <- truth[ord]
+  TPR=cumsum(truth)/max(1,sum(truth)) 
+  FPR=cumsum(!truth)/max(1,sum(!truth))
+  dup<-c(probs[-1]>=probs[-length(probs)], FALSE)
+  TPR<-c(0,TPR[!dup],1); FPR<-c(0,FPR[!dup],1)
+  n <- length(TPR)
+  auc<- sum( ((TPR[-1]+TPR[-n])/2) * (FPR[-1]-FPR[-n]) )
+data.frame(acc,sens,spec,ppv,auc)}
+class_diag(probs,data$y)
+
+data$logit<-predict(fit1,type="link")
+data%>%ggplot()+geom_density(aes(logit,color=outcome,fill=outcome), alpha=.4)+
+  theme_classic()+geom_vline(xintercept=0)+xlab("logit (log-odds)")+
+  geom_rug(aes(logit,color=outcome))+
+  geom_text(x=-5,y=.07,label="TN = 31")+
+  geom_text(x=-1.75,y=.008,label="FN = 10")+
+  geom_text(x=1,y=.006,label="FP = 2")+
+  geom_text(x=5,y=.04,label="TP = 22")
+
+ROCplot<-ggplot(data)+geom_roc(aes(d=y,m=probs), n.cuts=0)+theme_classic()
+ROCplot
+calc_auc(ROCplot)
+
+set.seed(1234)
+k=10
+data1<-data[sample(nrow(data)),] 
+folds<-cut(seq(1:nrow(data)),breaks=k,labels=F) 
+diags<-NULL
+for(i in 1:k){         
+  train<-data[folds!=i,] 
+  test<-data[folds==i,]  
+  truth<-test$y
+  fit<-glm(y~age_c+reject+surgery+wait.t_c,data=train,family="binomial")
+  probs<-predict(fit,newdata = test,type="response")
+  diags<-rbind(diags,class_diag(probs,truth)) }
+summarize_all(diags,mean) 
+```
+
+*When a person is at the average age, the odds that they died is 1.03. When reject is 0 the odds that they died are 407566106. When surgery is 0 the odds that they died is -0.77. When a person has an average wait time the odds that they died is -0.005. There were 22 true positives, 31 true negatives, 2 false positives, and 10 false negatives. The AUC is 0.897 so it is a great tradeoff between sensitivity and specificity for my data. When you use a 10-fold CV it goes down to 0.858, so there is evidence of overfitting. The average out-of-sample accuracy is 0.814, the sensitivity is 0.755, and the recall is 0.925.*
+
+#### 6. LASSO and 10-Fold CV
+
+```{r}
+set.seed(1234)
+y<-as.matrix(data$y) #grab response
+x<-model.matrix(y~age_c+reject+surgery+wait.t_c,data=data)[,-1]
+cv <- cv.glmnet(x,y)
+cv<-cv.glmnet(x,y,family="binomial")
+lasso<-glmnet(x,y,family="binomial",lambda=cv$lambda.1se)
+coef(lasso)
+
+
+set.seed(1234)
+k=10
+data <- data%>% sample_frac #put rows of dataset in random order
+folds <- ntile(1:nrow(data),n=10) #create fold labels
+diags<-NULL
+for(i in 1:k){
+train <- data[folds!=i,] #create training set (all but fold i)
+test <- data[folds==i,] #create test set (just fold i)
+truth <- test$y #save truth labels from fold i
+fit <- glm(y~reject,
+data=train, family="binomial")
+probs <- predict(fit, newdata=test, type="response")
+diags<-rbind(diags,class_diag(probs,truth))
+}
+diags%>%summarize_all(mean)
+```
+
+*When I used a LASSO, the only variable maintained is reject which makes sense. If someone rejects their transplant they are more likely to die. When I ran a 10-fold CV with just reject the accuracy went up from 0.762 to 0.0814.* 
+
+###Sources
+
+*[1] John Crowley & Marie Hu (1977) Covariance Analysis of Heart Transplant
+Survival Data, Journal of the American Statistical Association, 72:357, 27-36*
+...

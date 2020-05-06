@@ -1,0 +1,1339 @@
+---
+title: 'Project 1: Exploratory Data Analysis'
+author: "Alexandra Sears"
+date: "3/15/2020"
+output:
+  html_document:
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+  pdf_document:
+    toc: no
+---
+
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/plotly-binding/plotly.js"></script>
+<script src="/rmarkdown-libs/typedarray/typedarray.min.js"></script>
+<script src="/rmarkdown-libs/jquery/jquery.min.js"></script>
+<link href="/rmarkdown-libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/crosstalk/js/crosstalk.min.js"></script>
+<link href="/rmarkdown-libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/plotly-main/plotly-latest.min.js"></script>
+
+
+<pre class="r"><code>exercise2015&lt;-read_csv(&quot;week16_exercise.csv&quot;)
+crime2015&lt;-read_csv(&quot;table5.csv&quot;)
+#data sets
+library(ggplot2)
+crime2015 &lt;- na.omit(crime2015) 
+glimpse(crime2015)</code></pre>
+<pre><code>## Rows: 52
+## Columns: 12
+## $ State               &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;, &quot;Arkansas&quot;, &quot;Cali…
+## $ Population          &lt;dbl&gt; 4858979, 738432, 6828065, 2978204, 39144818, 5456…
+## $ Violent_crime       &lt;dbl&gt; 22952, 5392, 28012, 15526, 166883, 17515, 7845, 4…
+## $ Murder_manslaughter &lt;dbl&gt; 348, 59, 309, 181, 1861, 176, 117, 63, 162, 1041,…
+## $ Rape_revdef         &lt;dbl&gt; 2039, 901, 3108, 1931, 12811, 3257, 773, 341, 494…
+## $ Rape_legdef         &lt;dbl&gt; 1456, 650, 2294, 1300, 9387, 2377, 582, 243, 366,…
+## $ Robbery             &lt;dbl&gt; 4611, 761, 6360, 2098, 52862, 3323, 2892, 1235, 3…
+## $ Aggravated_assault  &lt;dbl&gt; 15954, 3671, 18235, 11316, 99349, 10759, 4063, 30…
+## $ Property_crime      &lt;dbl&gt; 144746, 20806, 207107, 96836, 1024914, 144136, 65…
+## $ Burglary            &lt;dbl&gt; 35255, 3511, 37957, 22640, 197404, 23454, 10053, …
+## $ Larceny_theft       &lt;dbl&gt; 99156, 15249, 152365, 68424, 656517, 104682, 4867…
+## $ Car_theft           &lt;dbl&gt; 10335, 2046, 16785, 5772, 170993, 16000, 6338, 11…</code></pre>
+<pre class="r"><code>exercise2015&lt;- exercise2015
+glimpse(exercise2015)</code></pre>
+<pre><code>## Rows: 52
+## Columns: 9
+## $ count            &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1…
+## $ state            &lt;chr&gt; &quot;All states (average)&quot;, &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizon…
+## $ adults           &lt;dbl&gt; 22, 19, 27, 26, 15, 24, 32, 24, 20, 30, 21, 20, 24, …
+## $ men              &lt;dbl&gt; 27, 24, 33, 29, 19, 28, 33, 28, 24, 40, 27, 27, 31, …
+## $ women            &lt;dbl&gt; 18, 14, 23, 23, 11, 19, 31, 21, 15, 22, 15, 14, 18, …
+## $ men_working      &lt;dbl&gt; 28, 25, 31, 31, 21, 29, 34, 29, 23, 40, 27, 29, 32, …
+## $ women_working    &lt;dbl&gt; 20, 15, 24, 26, 13, 21, 33, 24, 17, 24, 17, 15, 19, …
+## $ men_nonworking   &lt;dbl&gt; 21, 23, 33, 22, 14, 24, 26, 22, 25, 43, 25, 21, 25, …
+## $ women_nonworking &lt;dbl&gt; 14, 13, 17, 16, 9, 15, 27, 13, 11, 18, 12, 12, 14, 2…</code></pre>
+<div id="introduction" class="section level4">
+<h4>Introduction</h4>
+<p><em>I got one data set from the FBI website on violent crimes by state, <a href="https://ucr.fbi.gov/crime-in-the-u.s/2015/crime-in-the-u.s.-2015/tables/table-5" class="uri">https://ucr.fbi.gov/crime-in-the-u.s/2015/crime-in-the-u.s.-2015/tables/table-5</a>. It contains population per state and total violent crimes, but also splits violent crimes into murder, rape, robbery, etc. I got the other from <a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2018/2018-07-17/week16_exercise.xlsx" class="uri">https://github.com/rfordatascience/tidytuesday/blob/master/data/2018/2018-07-17/week16_exercise.xlsx</a>, which is originally from the National Health Statistics Reports by the CDC. This data set has the percentage of adults 18-64 that exercise the recommended daily amount. It has this split into male and female and employed and unemployed. I chose the first data set because I did my biostatistics project on poulation and crime and I wanted to further explore that. I chose the second data set because I know that exercise releases chemicals that improve your mood and I wanted to know if states that had more people exercising had less crime. I am connecting the data sets by state. I collected data from crime in 2015 because that is the year the exercise data was from and I named the FBI crime one crime2015 and the CDC exercise one exercise 2015. I expect to see that states with higher individuals that work out will have less violent crimes. I also expect the states with more active unemployed adults may also have less robbery and burglaries assuming most robberies are done by people without steady income. </em></p>
+</div>
+<div id="joiningmerging" class="section level4">
+<h4>Joining/Merging</h4>
+<pre class="r"><code>crime2015&lt;-crime2015%&gt;%rename(state=State)%&gt;%mutate(state=recode(state,&quot;West Virgina&quot;=&quot;West Virginia&quot;))
+both&lt;- inner_join(crime2015, exercise2015, by=&quot;state&quot;)
+both&lt;-both%&gt;%select(-count)
+glimpse(both)</code></pre>
+<pre><code>## Rows: 50
+## Columns: 19
+## $ state               &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;, &quot;Arkansas&quot;, &quot;Cali…
+## $ Population          &lt;dbl&gt; 4858979, 738432, 6828065, 2978204, 39144818, 5456…
+## $ Violent_crime       &lt;dbl&gt; 22952, 5392, 28012, 15526, 166883, 17515, 7845, 4…
+## $ Murder_manslaughter &lt;dbl&gt; 348, 59, 309, 181, 1861, 176, 117, 63, 162, 1041,…
+## $ Rape_revdef         &lt;dbl&gt; 2039, 901, 3108, 1931, 12811, 3257, 773, 341, 494…
+## $ Rape_legdef         &lt;dbl&gt; 1456, 650, 2294, 1300, 9387, 2377, 582, 243, 366,…
+## $ Robbery             &lt;dbl&gt; 4611, 761, 6360, 2098, 52862, 3323, 2892, 1235, 3…
+## $ Aggravated_assault  &lt;dbl&gt; 15954, 3671, 18235, 11316, 99349, 10759, 4063, 30…
+## $ Property_crime      &lt;dbl&gt; 144746, 20806, 207107, 96836, 1024914, 144136, 65…
+## $ Burglary            &lt;dbl&gt; 35255, 3511, 37957, 22640, 197404, 23454, 10053, …
+## $ Larceny_theft       &lt;dbl&gt; 99156, 15249, 152365, 68424, 656517, 104682, 4867…
+## $ Car_theft           &lt;dbl&gt; 10335, 2046, 16785, 5772, 170993, 16000, 6338, 11…
+## $ adults              &lt;dbl&gt; 19, 27, 26, 15, 24, 32, 24, 20, 30, 21, 20, 24, 3…
+## $ men                 &lt;dbl&gt; 24, 33, 29, 19, 28, 33, 28, 24, 40, 27, 27, 31, 3…
+## $ women               &lt;dbl&gt; 14, 23, 23, 11, 19, 31, 21, 15, 22, 15, 14, 18, 2…
+## $ men_working         &lt;dbl&gt; 25, 31, 31, 21, 29, 34, 29, 23, 40, 27, 29, 32, 3…
+## $ women_working       &lt;dbl&gt; 15, 24, 26, 13, 21, 33, 24, 17, 24, 17, 15, 19, 2…
+## $ men_nonworking      &lt;dbl&gt; 23, 33, 22, 14, 24, 26, 22, 25, 43, 25, 21, 25, 3…
+## $ women_nonworking    &lt;dbl&gt; 13, 17, 16, 9, 15, 27, 13, 11, 18, 12, 12, 14, 28…</code></pre>
+<p><em>I had to rename State to state match the case in exercise2015 and I had to fix the spelling mistake in West Virginia. I chose innerjoin because crime2015 included Puerto Rico and exercise2015 had a total of the country and crime2015 did not have crime totals. I was not interested in the nation total so this was not a problem.</em></p>
+</div>
+<div id="wrangling" class="section level4">
+<h4>Wrangling</h4>
+<pre class="r"><code>library(knitr)
+library(kableExtra)
+
+both %&gt;% filter(Population&gt;=6000000)</code></pre>
+<pre><code>## # A tibble: 18 x 19
+##    state Population Violent_crime Murder_manslaug… Rape_revdef Rape_legdef
+##    &lt;chr&gt;      &lt;dbl&gt;         &lt;dbl&gt;            &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+##  1 Ariz…    6828065         28012              309        3108        2294
+##  2 Cali…   39144818        166883             1861       12811        9387
+##  3 Flor…   20271272         93626             1041        7553        5430
+##  4 Geor…   10214860         38643              615        3224        2296
+##  5 Illi…   12859995         49354              744        4821        3549
+##  6 Indi…    6619680         25653              373        2404        1789
+##  7 Mary…    6006401         27462              516        1666        1184
+##  8 Mass…    6794422         26562              128        2075        1608
+##  9 Mich…    9922576         41231              571        6450        4163
+## 10 Miss…    6083672         30261              502        2553        1854
+## 11 New …    8958013         22879              363        1373        1019
+## 12 New …   19795791         75165              609        6074        4389
+## 13 Nort…   10042802         34852              517        2684        1939
+## 14 Ohio    11613423         33898              500        5149        4154
+## 15 Penn…   12802503         40339              658        4305        3122
+## 16 Tenn…    6600299         40400              406        2676        1966
+## 17 Texas   27469114        113227             1316       12250        8925
+## 18 Wash…    7170351         20394              211        2705        2193
+## # … with 13 more variables: Robbery &lt;dbl&gt;, Aggravated_assault &lt;dbl&gt;,
+## #   Property_crime &lt;dbl&gt;, Burglary &lt;dbl&gt;, Larceny_theft &lt;dbl&gt;, Car_theft &lt;dbl&gt;,
+## #   adults &lt;dbl&gt;, men &lt;dbl&gt;, women &lt;dbl&gt;, men_working &lt;dbl&gt;,
+## #   women_working &lt;dbl&gt;, men_nonworking &lt;dbl&gt;, women_nonworking &lt;dbl&gt;</code></pre>
+<pre class="r"><code>both %&gt;% arrange(desc(Violent_crime))</code></pre>
+<pre><code>## # A tibble: 50 x 19
+##    state Population Violent_crime Murder_manslaug… Rape_revdef Rape_legdef
+##    &lt;chr&gt;      &lt;dbl&gt;         &lt;dbl&gt;            &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+##  1 Cali…   39144818        166883             1861       12811        9387
+##  2 Texas   27469114        113227             1316       12250        8925
+##  3 Flor…   20271272         93626             1041        7553        5430
+##  4 New …   19795791         75165              609        6074        4389
+##  5 Illi…   12859995         49354              744        4821        3549
+##  6 Mich…    9922576         41231              571        6450        4163
+##  7 Tenn…    6600299         40400              406        2676        1966
+##  8 Penn…   12802503         40339              658        4305        3122
+##  9 Geor…   10214860         38643              615        3224        2296
+## 10 Nort…   10042802         34852              517        2684        1939
+## # … with 40 more rows, and 13 more variables: Robbery &lt;dbl&gt;,
+## #   Aggravated_assault &lt;dbl&gt;, Property_crime &lt;dbl&gt;, Burglary &lt;dbl&gt;,
+## #   Larceny_theft &lt;dbl&gt;, Car_theft &lt;dbl&gt;, adults &lt;dbl&gt;, men &lt;dbl&gt;, women &lt;dbl&gt;,
+## #   men_working &lt;dbl&gt;, women_working &lt;dbl&gt;, men_nonworking &lt;dbl&gt;,
+## #   women_nonworking &lt;dbl&gt;</code></pre>
+<pre class="r"><code>both%&gt;% select(Population, Violent_crime)</code></pre>
+<pre><code>## # A tibble: 50 x 2
+##    Population Violent_crime
+##         &lt;dbl&gt;         &lt;dbl&gt;
+##  1    4858979         22952
+##  2     738432          5392
+##  3    6828065         28012
+##  4    2978204         15526
+##  5   39144818        166883
+##  6    5456574         17515
+##  7    3590886          7845
+##  8     945934          4720
+##  9     672228          8531
+## 10   20271272         93626
+## # … with 40 more rows</code></pre>
+<pre class="r"><code>both %&gt;% mutate(violcrimebypop=(Violent_crime/Population))%&gt;%select(state, violcrimebypop)</code></pre>
+<pre><code>## # A tibble: 50 x 2
+##    state                violcrimebypop
+##    &lt;chr&gt;                         &lt;dbl&gt;
+##  1 Alabama                     0.00472
+##  2 Alaska                      0.00730
+##  3 Arizona                     0.00410
+##  4 Arkansas                    0.00521
+##  5 California                  0.00426
+##  6 Colorado                    0.00321
+##  7 Connecticut                 0.00218
+##  8 Delaware                    0.00499
+##  9 District of Columbia        0.0127 
+## 10 Florida                     0.00462
+## # … with 40 more rows</code></pre>
+<pre class="r"><code>#to seperate state size into 3 categorical variabels, small, medium, and large
+pop_vec&lt;- both %&gt;% pull(Population)
+stsize&lt;- cut( pop_vec,
+  breaks = c( 1, 2500000, 6000000, Inf),
+  labels = c(&quot;small.st&quot;, &quot;medium.st&quot;, &quot;large.st&quot;),
+  right  = FALSE)
+
+both%&gt;%mutate(stsize=stsize)%&gt;%group_by(stsize)%&gt;%summarize_all(n_distinct)</code></pre>
+<pre><code>## # A tibble: 3 x 20
+##   stsize state Population Violent_crime Murder_manslaug… Rape_revdef Rape_legdef
+##   &lt;fct&gt;  &lt;int&gt;      &lt;int&gt;         &lt;int&gt;            &lt;int&gt;       &lt;int&gt;       &lt;int&gt;
+## 1 small…    16         16            16               15          16          16
+## 2 mediu…    16         16            16               16          16          16
+## 3 large…    18         18            18               18          18          18
+## # … with 13 more variables: Robbery &lt;int&gt;, Aggravated_assault &lt;int&gt;,
+## #   Property_crime &lt;int&gt;, Burglary &lt;int&gt;, Larceny_theft &lt;int&gt;, Car_theft &lt;int&gt;,
+## #   adults &lt;int&gt;, men &lt;int&gt;, women &lt;int&gt;, men_working &lt;int&gt;,
+## #   women_working &lt;int&gt;, men_nonworking &lt;int&gt;, women_nonworking &lt;int&gt;</code></pre>
+<pre class="r"><code>both&lt;-both%&gt;%mutate(stsize=stsize)</code></pre>
+<p><em>Because the amount of violent crime is not standardized by population of the state I wanted to look at how population affects rate ofcrime. I then used mutate to normalize that vaulue by population. I could not find a data set with a categorical value other than state so I made one by designating states as small, medium and large so I could see if the correlation by state size might have changed. I did this by creating 3 almost equivalent groups.</em></p>
+<pre class="r"><code>both %&gt;%summarize(ndistst=n_distinct(state), n())</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   ndistst `n()`
+##     &lt;int&gt; &lt;int&gt;
+## 1      50    50</code></pre>
+<pre class="r"><code>both %&gt;%group_by(stsize)%&gt;%summarize(ndistst=n_distinct(stsize), n())</code></pre>
+<pre><code>## # A tibble: 3 x 3
+##   stsize    ndistst `n()`
+##   &lt;fct&gt;       &lt;int&gt; &lt;int&gt;
+## 1 small.st        1    16
+## 2 medium.st       1    16
+## 3 large.st        1    18</code></pre>
+<pre class="r"><code>#normalize the crime by population of the state
+both&lt;-both %&gt;% mutate(violcrimebypop=(Violent_crime/Population),
+                   murbypop=(Murder_manslaughter/Population),
+                   robbypop=( Robbery /Population))
+
+viol&lt;-both%&gt;%summarise(sdviol=sd(violcrimebypop), meanviol=mean(violcrimebypop), varviol=var(violcrimebypop), maxviol=max(violcrimebypop), minviol=min(violcrimebypop), quanviol=quantile(violcrimebypop, .75), corviol=cor(violcrimebypop, adults))
+
+violbysize&lt;-both%&gt;%group_by(stsize)%&gt;%summarise(sdviol=sd(violcrimebypop), meanviol=mean(violcrimebypop), varviol=var(violcrimebypop), maxviol=max(violcrimebypop), minviol=min(violcrimebypop), quanviol=quantile(violcrimebypop, .75), corviol=cor(violcrimebypop, adults))
+
+mur&lt;-both%&gt;%summarise(sdmur=sd(murbypop), meanmur=mean(murbypop), varmur=var(murbypop), maxmur=max(murbypop), minmur=min(murbypop), quanmur=quantile(murbypop, .75), cormur=cor(murbypop, adults))
+
+murbysize&lt;-both%&gt;%group_by(stsize)%&gt;%summarise(sdmur=sd(murbypop), meanmur=mean(murbypop), varmur=var(murbypop), maxmur=max(murbypop), minmur=min(murbypop), quanmur=quantile(murbypop, .75), cormur=cor(murbypop, adults))
+
+rob&lt;-both%&gt;%summarise(sdrob=sd(robbypop), meanrob=mean(robbypop), varrob=var(robbypop), maxrob=max(robbypop), minrob=min(robbypop), quanrob=quantile(robbypop, .75), corrob=cor(robbypop, adults))
+
+robbysize&lt;-both%&gt;%group_by(stsize)%&gt;%summarise(sdrob=sd(robbypop), meanrob=mean(robbypop), varrob=var(robbypop), maxrob=max(robbypop), minrob=min(robbypop), quanrob=quantile(robbypop, .75), corrob=cor(robbypop, adults))
+
+adults&lt;-both%&gt;%summarise(sdadults=sd(adults), meanadults=mean(adults), varadults=var(adults), maxadults=max(adults), minadults=min(adults), quanadults=quantile(adults, .75), coradults=cor(adults, murbypop))
+
+adultssize&lt;-both%&gt;%group_by(stsize)%&gt;%summarise(sdadults=sd(adults), meanadults=mean(adults), varadults=var(adults), maxadults=max(adults), minadults=min(adults), quanadults=quantile(adults, .75), coradults=cor(adults, murbypop))
+
+men&lt;-both%&gt;%summarise(sdmen=sd(men), meanmen=mean(men), varmen=var(men), maxmen=max(men), minmen=min(men), quanmen=quantile(men, .75), cormen=cor(men, murbypop))
+
+mensize&lt;-both%&gt;%group_by(stsize)%&gt;%summarise(sdmen=sd(men), meanmen=mean(men), varmen=var(men), maxmen=max(men), minmen=min(men), quanmen=quantile(men, .75), cormen=cor(men, murbypop))
+
+women&lt;-both%&gt;%summarise(sdwomen=sd(women), meanwomen=mean(women), varwomen=var(women), maxwomen=max(women), minwomen=min(women), quanmen=quantile(women, .75), cormen=cor(women, murbypop))
+
+womensize&lt;-both%&gt;%group_by(stsize)%&gt;%summarise(sdwomen=sd(women), meanwomen=mean(women), varwomen=var(women), maxwomen=max(women), minwomen=min(women), quanmen=quantile(women, .75), cormen=cor(women, murbypop))
+
+normboth&lt;-both%&gt;%select(violcrimebypop,murbypop,robbypop,adults,men,women)%&gt;%na.omit
+cor(normboth)</code></pre>
+<pre><code>##                violcrimebypop   murbypop    robbypop      adults       men
+## violcrimebypop     1.00000000  0.8597597  0.84098123 -0.04613757 0.1351449
+## murbypop           0.85975971  1.0000000  0.86875086 -0.13642568 0.1016489
+## robbypop           0.84098123  0.8687509  1.00000000  0.08912985 0.3144538
+## adults            -0.04613757 -0.1364257  0.08912985  1.00000000 0.9161553
+## men                0.13514490  0.1016489  0.31445376  0.91615529 1.0000000
+## women             -0.17517838 -0.2972092 -0.08787929  0.94149363 0.7406463
+##                      women
+## violcrimebypop -0.17517838
+## murbypop       -0.29720922
+## robbypop       -0.08787929
+## adults          0.94149363
+## men             0.74064625
+## women           1.00000000</code></pre>
+<pre class="r"><code>kable(viol) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;,&quot;condensed&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+sdviol
+</th>
+<th style="text-align:right;">
+meanviol
+</th>
+<th style="text-align:right;">
+varviol
+</th>
+<th style="text-align:right;">
+maxviol
+</th>
+<th style="text-align:right;">
+minviol
+</th>
+<th style="text-align:right;">
+quanviol
+</th>
+<th style="text-align:right;">
+corviol
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+0.001867
+</td>
+<td style="text-align:right;">
+0.0038355
+</td>
+<td style="text-align:right;">
+3.5e-06
+</td>
+<td style="text-align:right;">
+0.0126906
+</td>
+<td style="text-align:right;">
+0.0011804
+</td>
+<td style="text-align:right;">
+0.0044949
+</td>
+<td style="text-align:right;">
+-0.0461376
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>kable(violbysize) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;,&quot;condensed&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+stsize
+</th>
+<th style="text-align:right;">
+sdviol
+</th>
+<th style="text-align:right;">
+meanviol
+</th>
+<th style="text-align:right;">
+varviol
+</th>
+<th style="text-align:right;">
+maxviol
+</th>
+<th style="text-align:right;">
+minviol
+</th>
+<th style="text-align:right;">
+quanviol
+</th>
+<th style="text-align:right;">
+corviol
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+small.st
+</td>
+<td style="text-align:right;">
+0.0029197
+</td>
+<td style="text-align:right;">
+0.0038502
+</td>
+<td style="text-align:right;">
+8.5e-06
+</td>
+<td style="text-align:right;">
+0.0126906
+</td>
+<td style="text-align:right;">
+0.0011804
+</td>
+<td style="text-align:right;">
+0.0041209
+</td>
+<td style="text-align:right;">
+0.1256096
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+medium.st
+</td>
+<td style="text-align:right;">
+0.0014241
+</td>
+<td style="text-align:right;">
+0.0036937
+</td>
+<td style="text-align:right;">
+2.0e-06
+</td>
+<td style="text-align:right;">
+0.0069592
+</td>
+<td style="text-align:right;">
+0.0021847
+</td>
+<td style="text-align:right;">
+0.0048039
+</td>
+<td style="text-align:right;">
+-0.2710411
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+large.st
+</td>
+<td style="text-align:right;">
+0.0008389
+</td>
+<td style="text-align:right;">
+0.0039483
+</td>
+<td style="text-align:right;">
+7.0e-07
+</td>
+<td style="text-align:right;">
+0.0061209
+</td>
+<td style="text-align:right;">
+0.0025540
+</td>
+<td style="text-align:right;">
+0.0042362
+</td>
+<td style="text-align:right;">
+-0.3273201
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>kable(mur) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;,&quot;condensed&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+sdmur
+</th>
+<th style="text-align:right;">
+meanmur
+</th>
+<th style="text-align:right;">
+varmur
+</th>
+<th style="text-align:right;">
+maxmur
+</th>
+<th style="text-align:right;">
+minmur
+</th>
+<th style="text-align:right;">
+quanmur
+</th>
+<th style="text-align:right;">
+cormur
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+3.51e-05
+</td>
+<td style="text-align:right;">
+4.95e-05
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.000241
+</td>
+<td style="text-align:right;">
+1.05e-05
+</td>
+<td style="text-align:right;">
+6.01e-05
+</td>
+<td style="text-align:right;">
+-0.1364257
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>kable(murbysize) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;,&quot;condensed&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+stsize
+</th>
+<th style="text-align:right;">
+sdmur
+</th>
+<th style="text-align:right;">
+meanmur
+</th>
+<th style="text-align:right;">
+varmur
+</th>
+<th style="text-align:right;">
+maxmur
+</th>
+<th style="text-align:right;">
+minmur
+</th>
+<th style="text-align:right;">
+quanmur
+</th>
+<th style="text-align:right;">
+cormur
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+small.st
+</td>
+<td style="text-align:right;">
+5.53e-05
+</td>
+<td style="text-align:right;">
+4.66e-05
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2.41e-04
+</td>
+<td style="text-align:right;">
+1.05e-05
+</td>
+<td style="text-align:right;">
+4.25e-05
+</td>
+<td style="text-align:right;">
+0.2087727
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+medium.st
+</td>
+<td style="text-align:right;">
+2.55e-05
+</td>
+<td style="text-align:right;">
+5.08e-05
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1.03e-04
+</td>
+<td style="text-align:right;">
+1.80e-05
+</td>
+<td style="text-align:right;">
+6.41e-05
+</td>
+<td style="text-align:right;">
+-0.6876613
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+large.st
+</td>
+<td style="text-align:right;">
+1.66e-05
+</td>
+<td style="text-align:right;">
+5.11e-05
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+8.59e-05
+</td>
+<td style="text-align:right;">
+1.88e-05
+</td>
+<td style="text-align:right;">
+5.78e-05
+</td>
+<td style="text-align:right;">
+-0.3605418
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>kable(rob) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;,&quot;condensed&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+sdrob
+</th>
+<th style="text-align:right;">
+meanrob
+</th>
+<th style="text-align:right;">
+varrob
+</th>
+<th style="text-align:right;">
+maxrob
+</th>
+<th style="text-align:right;">
+minrob
+</th>
+<th style="text-align:right;">
+quanrob
+</th>
+<th style="text-align:right;">
+corrob
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+0.0007894
+</td>
+<td style="text-align:right;">
+0.0009079
+</td>
+<td style="text-align:right;">
+6e-07
+</td>
+<td style="text-align:right;">
+0.0055666
+</td>
+<td style="text-align:right;">
+0.0001007
+</td>
+<td style="text-align:right;">
+0.0010848
+</td>
+<td style="text-align:right;">
+0.0891298
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>kable(robbysize) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;,&quot;condensed&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+stsize
+</th>
+<th style="text-align:right;">
+sdrob
+</th>
+<th style="text-align:right;">
+meanrob
+</th>
+<th style="text-align:right;">
+varrob
+</th>
+<th style="text-align:right;">
+maxrob
+</th>
+<th style="text-align:right;">
+minrob
+</th>
+<th style="text-align:right;">
+quanrob
+</th>
+<th style="text-align:right;">
+corrob
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+small.st
+</td>
+<td style="text-align:right;">
+0.0013264
+</td>
+<td style="text-align:right;">
+0.0008132
+</td>
+<td style="text-align:right;">
+1.8e-06
+</td>
+<td style="text-align:right;">
+0.0055666
+</td>
+<td style="text-align:right;">
+0.0001007
+</td>
+<td style="text-align:right;">
+0.0008879
+</td>
+<td style="text-align:right;">
+0.2777336
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+medium.st
+</td>
+<td style="text-align:right;">
+0.0004147
+</td>
+<td style="text-align:right;">
+0.0008153
+</td>
+<td style="text-align:right;">
+2.0e-07
+</td>
+<td style="text-align:right;">
+0.0021748
+</td>
+<td style="text-align:right;">
+0.0003352
+</td>
+<td style="text-align:right;">
+0.0008307
+</td>
+<td style="text-align:right;">
+-0.1086016
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+large.st
+</td>
+<td style="text-align:right;">
+0.0002148
+</td>
+<td style="text-align:right;">
+0.0010743
+</td>
+<td style="text-align:right;">
+0.0e+00
+</td>
+<td style="text-align:right;">
+0.0016421
+</td>
+<td style="text-align:right;">
+0.0007599
+</td>
+<td style="text-align:right;">
+0.0011618
+</td>
+<td style="text-align:right;">
+-0.4056610
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>kable(adults) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;,&quot;condensed&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+sdadults
+</th>
+<th style="text-align:right;">
+meanadults
+</th>
+<th style="text-align:right;">
+varadults
+</th>
+<th style="text-align:right;">
+maxadults
+</th>
+<th style="text-align:right;">
+minadults
+</th>
+<th style="text-align:right;">
+quanadults
+</th>
+<th style="text-align:right;">
+coradults
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+4.641824
+</td>
+<td style="text-align:right;">
+22.62
+</td>
+<td style="text-align:right;">
+21.54653
+</td>
+<td style="text-align:right;">
+32
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;">
+-0.1364257
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>kable(adultssize) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;,&quot;condensed&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+stsize
+</th>
+<th style="text-align:right;">
+sdadults
+</th>
+<th style="text-align:right;">
+meanadults
+</th>
+<th style="text-align:right;">
+varadults
+</th>
+<th style="text-align:right;">
+maxadults
+</th>
+<th style="text-align:right;">
+minadults
+</th>
+<th style="text-align:right;">
+quanadults
+</th>
+<th style="text-align:right;">
+coradults
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+small.st
+</td>
+<td style="text-align:right;">
+4.674398
+</td>
+<td style="text-align:right;">
+24.12500
+</td>
+<td style="text-align:right;">
+21.85000
+</td>
+<td style="text-align:right;">
+31
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+27.50
+</td>
+<td style="text-align:right;">
+0.2087727
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+medium.st
+</td>
+<td style="text-align:right;">
+5.473801
+</td>
+<td style="text-align:right;">
+21.31250
+</td>
+<td style="text-align:right;">
+29.96250
+</td>
+<td style="text-align:right;">
+32
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+24.25
+</td>
+<td style="text-align:right;">
+-0.6876613
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+large.st
+</td>
+<td style="text-align:right;">
+3.551673
+</td>
+<td style="text-align:right;">
+22.44444
+</td>
+<td style="text-align:right;">
+12.61438
+</td>
+<td style="text-align:right;">
+29
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+24.00
+</td>
+<td style="text-align:right;">
+-0.3605418
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>kable(men) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;,&quot;condensed&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+sdmen
+</th>
+<th style="text-align:right;">
+meanmen
+</th>
+<th style="text-align:right;">
+varmen
+</th>
+<th style="text-align:right;">
+maxmen
+</th>
+<th style="text-align:right;">
+minmen
+</th>
+<th style="text-align:right;">
+quanmen
+</th>
+<th style="text-align:right;">
+cormen
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+5.023252
+</td>
+<td style="text-align:right;">
+26.46
+</td>
+<td style="text-align:right;">
+25.23306
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+29
+</td>
+<td style="text-align:right;">
+0.1016489
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>kable(mensize) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;,&quot;condensed&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+stsize
+</th>
+<th style="text-align:right;">
+sdmen
+</th>
+<th style="text-align:right;">
+meanmen
+</th>
+<th style="text-align:right;">
+varmen
+</th>
+<th style="text-align:right;">
+maxmen
+</th>
+<th style="text-align:right;">
+minmen
+</th>
+<th style="text-align:right;">
+quanmen
+</th>
+<th style="text-align:right;">
+cormen
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+small.st
+</td>
+<td style="text-align:right;">
+6.434283
+</td>
+<td style="text-align:right;">
+27.75000
+</td>
+<td style="text-align:right;">
+41.40000
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+31.5
+</td>
+<td style="text-align:right;">
+0.4190737
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+medium.st
+</td>
+<td style="text-align:right;">
+4.676181
+</td>
+<td style="text-align:right;">
+24.50000
+</td>
+<td style="text-align:right;">
+21.86667
+</td>
+<td style="text-align:right;">
+33
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+28.0
+</td>
+<td style="text-align:right;">
+-0.6448287
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+large.st
+</td>
+<td style="text-align:right;">
+3.368928
+</td>
+<td style="text-align:right;">
+27.05556
+</td>
+<td style="text-align:right;">
+11.34967
+</td>
+<td style="text-align:right;">
+32
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:right;">
+29.0
+</td>
+<td style="text-align:right;">
+-0.1301367
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>kable(women) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;,&quot;condensed&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+sdwomen
+</th>
+<th style="text-align:right;">
+meanwomen
+</th>
+<th style="text-align:right;">
+varwomen
+</th>
+<th style="text-align:right;">
+maxwomen
+</th>
+<th style="text-align:right;">
+minwomen
+</th>
+<th style="text-align:right;">
+quanmen
+</th>
+<th style="text-align:right;">
+cormen
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+5.092972
+</td>
+<td style="text-align:right;">
+18.98
+</td>
+<td style="text-align:right;">
+25.93837
+</td>
+<td style="text-align:right;">
+31
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+21.75
+</td>
+<td style="text-align:right;">
+-0.2972092
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>kable(womensize) %&gt;%
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;,&quot;condensed&quot;))</code></pre>
+<table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+stsize
+</th>
+<th style="text-align:right;">
+sdwomen
+</th>
+<th style="text-align:right;">
+meanwomen
+</th>
+<th style="text-align:right;">
+varwomen
+</th>
+<th style="text-align:right;">
+maxwomen
+</th>
+<th style="text-align:right;">
+minwomen
+</th>
+<th style="text-align:right;">
+quanmen
+</th>
+<th style="text-align:right;">
+cormen
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+small.st
+</td>
+<td style="text-align:right;">
+4.485161
+</td>
+<td style="text-align:right;">
+20.62500
+</td>
+<td style="text-align:right;">
+20.11667
+</td>
+<td style="text-align:right;">
+31
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+23.00
+</td>
+<td style="text-align:right;">
+-0.0583342
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+medium.st
+</td>
+<td style="text-align:right;">
+6.394985
+</td>
+<td style="text-align:right;">
+18.31250
+</td>
+<td style="text-align:right;">
+40.89583
+</td>
+<td style="text-align:right;">
+31
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+21.25
+</td>
+<td style="text-align:right;">
+-0.6884800
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+large.st
+</td>
+<td style="text-align:right;">
+4.142873
+</td>
+<td style="text-align:right;">
+18.11111
+</td>
+<td style="text-align:right;">
+17.16340
+</td>
+<td style="text-align:right;">
+26
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+19.75
+</td>
+<td style="text-align:right;">
+-0.5078249
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tidying-rearranging-widelong" class="section level4">
+<h4>Tidying: Rearranging Wide/Long</h4>
+<pre class="r"><code>both1&lt;-both%&gt;%pivot_wider(names_from=&quot;stsize&quot;, values_from=&quot;Population&quot;)
+both1 %&gt;% pivot_longer(cols=c(&quot;medium.st&quot;,&quot;small.st&quot;,&quot;large.st&quot;),names_to=&quot;stsize&quot;,values_to=&quot;Population&quot;)%&gt;%na.omit()</code></pre>
+<pre><code>## # A tibble: 46 x 23
+##    state Violent_crime Murder_manslaug… Rape_revdef Rape_legdef Robbery
+##    &lt;chr&gt;         &lt;dbl&gt;            &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Alab…         22952              348        2039        1456    4611
+##  2 Alas…          5392               59         901         650     761
+##  3 Ariz…         28012              309        3108        2294    6360
+##  4 Arka…         15526              181        1931        1300    2098
+##  5 Cali…        166883             1861       12811        9387   52862
+##  6 Colo…         17515              176        3257        2377    3323
+##  7 Conn…          7845              117         773         582    2892
+##  8 Dela…          4720               63         341         243    1235
+##  9 Dist…          8531              162         494         366    3742
+## 10 Flor…         93626             1041        7553        5430   21137
+## # … with 36 more rows, and 17 more variables: Aggravated_assault &lt;dbl&gt;,
+## #   Property_crime &lt;dbl&gt;, Burglary &lt;dbl&gt;, Larceny_theft &lt;dbl&gt;, Car_theft &lt;dbl&gt;,
+## #   adults &lt;dbl&gt;, men &lt;dbl&gt;, women &lt;dbl&gt;, men_working &lt;dbl&gt;,
+## #   women_working &lt;dbl&gt;, men_nonworking &lt;dbl&gt;, women_nonworking &lt;dbl&gt;,
+## #   violcrimebypop &lt;dbl&gt;, murbypop &lt;dbl&gt;, robbypop &lt;dbl&gt;, stsize &lt;chr&gt;,
+## #   Population &lt;dbl&gt;</code></pre>
+</div>
+<div id="visualizing" class="section level4">
+<h4>Visualizing</h4>
+<pre class="r"><code>library(ggplot2) 
+
+normboth%&gt;%select_if(is.numeric)%&gt;%cor%&gt;%as.data.frame%&gt;%
+rownames_to_column%&gt;%pivot_longer(-1)%&gt;%
+ggplot(aes(rowname,name,fill=value))+geom_tile()+
+geom_text(aes(label=round(value,2)))+
+xlab(&quot;&quot;)+ylab(&quot;&quot;)+ scale_fill_gradient2(low=&quot;yellow&quot;, high=&quot;red&quot;)</code></pre>
+<p><img src="/project1-1_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(data = both, aes(x = men , y =robbypop,color=stsize))+geom_point()+theme_light()+
+  ggtitle(&quot;Violent Crime and Daily Exercise&quot;) + ylab(&quot;Violent Crime by Population&quot;) + xlab(&quot;Percent of Adults that Exercise&quot;)+facet_wrap(~stsize)</code></pre>
+<p><img src="/project1-1_files/figure-html/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#ggplot(data = both, aes(x = women, fill=stsize))+geom_histogram(bins=50)+theme_bw()+
+  #ggtitle(&quot;Recommended Daily Exercise by Adult&quot;) + xlab(&quot;Percent of Adults that Exercise&quot;)+
+ # theme(legend.position=c(.8,.7))+geom_errorbar(stat=&quot;summary&quot;)
+
+ggplot(data = both, aes(x = women,fill=stsize))+geom_density(alpha=.75)+theme_bw()+
+  ggtitle(&quot;Recommended Daily Exercise by Adult&quot;) + xlab(&quot;Percent of Adults that Exercise&quot;)+
+  theme(legend.position=c(.8,.7))+geom_rug()</code></pre>
+<p><img src="/project1-1_files/figure-html/unnamed-chunk-6-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(both, aes(x=adults, y=violcrimebypop, group=stsize))+geom_boxplot()+geom_jitter(alpha=.5)</code></pre>
+<p><img src="/project1-1_files/figure-html/unnamed-chunk-6-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>library(ggplot2)
+#library(ggExtra)
+p1&lt;-ggplot(both, aes(x = violcrimebypop , y =women))+geom_point()
+#ggMarginal(p1,type = &#39;histogram&#39;)
+
+ggplot(both, aes(x = stsize))+
+geom_bar(aes(y=adults), stat=&quot;summary&quot;, fun.y=&quot;mean&quot;)</code></pre>
+<p><img src="/project1-1_files/figure-html/unnamed-chunk-6-5.png" width="672" style="display: block; margin: auto;" />
+#### Dimensionality Reduction</p>
+<pre class="r"><code>library(cluster)
+
+pam_dat&lt;-both%&gt;%select(robbypop,murbypop,violcrimebypop,adults,men,women)
+sil_width&lt;-vector()
+for(i in 2:10){
+pam_fit &lt;- pam(pam_dat, k = i)
+sil_width[i] &lt;- pam_fit$silinfo$avg.width}
+ggplot()+geom_line(aes(x=1:10,y=sil_width))+scale_x_continuous(name=&quot;k&quot;,breaks=1:10)</code></pre>
+<p><img src="/project1-1_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>pam2&lt;-both%&gt;%select(robbypop,murbypop,violcrimebypop,adults,men,women)%&gt;%pam(3)
+
+final&lt;-both%&gt;%mutate(cluster=as.factor(pam2$clustering))
+confmat&lt;-final%&gt;%group_by(stsize)%&gt;%count(cluster)%&gt;%arrange(desc(n))%&gt;%
+pivot_wider(names_from=&quot;cluster&quot;,values_from=&quot;n&quot;,values_fill = list(&#39;n&#39;=0))
+confmat</code></pre>
+<pre><code>## # A tibble: 3 x 4
+## # Groups:   stsize [3]
+##   stsize      `3`   `1`   `2`
+##   &lt;fct&gt;     &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1 large.st     13     3     2
+## 2 medium.st     6     7     3
+## 3 small.st      5     5     6</code></pre>
+<pre class="r"><code>round(sum(diag(as.matrix(confmat[,2:4])))/sum(confmat[,2:4]),4)</code></pre>
+<pre><code>## [1] 0.52</code></pre>
+<pre class="r"><code>library(plotly)
+final %&gt;% plot_ly(x= ~violcrimebypop, y = ~robbypop, z = ~murbypop,  color =  ~cluster, 
+    type =  &quot;scatter3d&quot;,  mode =  &quot;markers&quot;,  symbol =  ~stsize,  symbols =  c(&#39;circle&#39;, &#39;x&#39;, &#39;o&#39;),size = .4)</code></pre>
+<div id="htmlwidget-1" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"visdat":{"9d7c349af63d":["function () ","plotlyVisDat"]},"cur_data":"9d7c349af63d","attrs":{"9d7c349af63d":{"x":{},"y":{},"z":{},"mode":"markers","color":{},"size":0.4,"symbol":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"symbols":["circle","x","o"],"type":"scatter3d"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"xaxis":{"title":"violcrimebypop"},"yaxis":{"title":"robbypop"},"zaxis":{"title":"murbypop"}},"hovermode":"closest","showlegend":true},"source":"A","config":{"showSendToCloud":false},"data":[{"x":[0.00387526285258502,0.00379701927546113,0.00612093482431629],"y":[0.001074221110386,0.0012091459239997,0.00113237294249851],"z":[5.63471346046939e-05,3.07641154627264e-05,6.15123648186241e-05],"mode":"markers","type":"scatter3d","name":"1<br />large.st","marker":{"color":"rgba(102,194,165,1)","size":[55,55,55],"sizemode":"area","symbol":"circle-open","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)","size":55},"error_y":{"color":"rgba(102,194,165,1)","width":55},"error_x":{"color":"rgba(102,194,165,1)","width":55},"line":{"color":"rgba(102,194,165,1)","width":55},"frame":null},{"x":[0.00472362609511175,0.00521320903470682,0.00218662120471168,0.00539702196062109,0.00275838284041248,0.00422003928067582,0.00504478420373902],"y":[0.000948964792809354,0.000704451407626878,0.000747329095078701,0.00118825261351345,0.000766625906942844,0.000768279294706824,0.000802876384813688],"z":[7.16199843629701e-05,6.07748831174762e-05,4.72306564473688e-05,0.000102981893171166,8.65545378806436e-05,5.98260748623617e-05,8.14926679065534e-05],"mode":"markers","type":"scatter3d","name":"1<br />medium.st","marker":{"color":"rgba(102,194,165,1)","size":[55,55,55,55,55,55,55],"sizemode":"area","symbol":"x","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)","size":55},"error_y":{"color":"rgba(102,194,165,1)","width":55},"error_x":{"color":"rgba(102,194,165,1)","width":55},"line":{"color":"rgba(102,194,165,1)","width":55},"frame":null},{"x":[0.00498977729947332,0.00349581634717687,0.00239389003166752,0.0038312391012372,0.00337883270575578],"y":[0.00130558791628169,0.000203301421464177,0.000195527441880128,0.000251610716286785,0.000412118898471256],"z":[6.66008410734787e-05,3.48516722510017e-05,2.77437586451534e-05,3.72756616721163e-05,3.79583195960367e-05],"mode":"markers","type":"scatter3d","name":"1<br />small.st","marker":{"color":"rgba(102,194,165,1)","size":[55,55,55,55,55],"sizemode":"area","symbol":"circle","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)","size":55},"error_y":{"color":"rgba(102,194,165,1)","width":55},"error_x":{"color":"rgba(102,194,165,1)","width":55},"line":{"color":"rgba(102,194,165,1)","width":55},"frame":null},{"x":[0.00390938331472493,0.00284421222894109],"y":[0.000778285481826122,0.00075993490416299],"z":[1.88389829186353e-05,2.94267323872988e-05],"mode":"markers","type":"scatter3d","name":"2<br />large.st","marker":{"color":"rgba(252,141,98,1)","size":[55,55],"sizemode":"area","symbol":"circle-open","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)","size":55},"error_y":{"color":"rgba(252,141,98,1)","width":55},"error_x":{"color":"rgba(252,141,98,1)","width":55},"line":{"color":"rgba(252,141,98,1)","width":55},"frame":null},{"x":[0.00320988957540024,0.00242622678471304,0.00236021067325251],"y":[0.000608990183217528,0.0006869360466366,0.000442602086371494],"z":[3.22546711544643e-05,2.42276569086894e-05,1.80245193544952e-05],"mode":"markers","type":"scatter3d","name":"2<br />medium.st","marker":{"color":"rgba(252,141,98,1)","size":[55,55,55],"sizemode":"area","symbol":"x","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)","size":55},"error_y":{"color":"rgba(252,141,98,1)","width":55},"error_x":{"color":"rgba(252,141,98,1)","width":55},"line":{"color":"rgba(252,141,98,1)","width":55},"frame":null},{"x":[0.00730195874501647,0.012690634725123,0.00215598242825981,0.00199307384293496,0.00118043198379661,0.00222143738259396],"y":[0.00103056205581557,0.00556656372540269,0.000116016991655236,0.00035171891345911,0.000161331028908604,0.000100664213189742],"z":[7.98990292945051e-05,0.000240989664221068,1.93361652758727e-05,1.05215059581785e-05,1.59733691988716e-05,2.7298769678574e-05],"mode":"markers","type":"scatter3d","name":"2<br />small.st","marker":{"color":"rgba(252,141,98,1)","size":[55,55,55,55,55,55],"sizemode":"area","symbol":"circle","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)","size":55},"error_y":{"color":"rgba(252,141,98,1)","width":55},"error_x":{"color":"rgba(252,141,98,1)","width":55},"line":{"color":"rgba(252,141,98,1)","width":55},"frame":null},{"x":[0.00410247998517882,0.0042632207409931,0.00461865441892349,0.00378301807366914,0.00383779309400976,0.00457212230751826,0.00415527177620005,0.00497413404272946,0.00255402621094656,0.00347034622409164,0.00291886380096549,0.00315086823256359,0.0041219749570372],"y":[0.00093144983241958,0.00135042140188262,0.00104270713747021,0.00119893958409611,0.00115940947099902,0.00164208150604663,0.000785683072621464,0.00104805124273629,0.00108606674270287,0.000878738822093675,0.00108099050555551,0.0010156607657112,0.00116254204631427],"z":[4.52544022354796e-05,4.7541414038507e-05,5.13534621803703e-05,6.02064051783382e-05,5.78538327580998e-05,8.59083501084926e-05,5.7545540593491e-05,8.25159541803043e-05,4.05223792374492e-05,5.14796567730799e-05,4.30536285468978e-05,5.13961996337747e-05,4.79083526319779e-05],"mode":"markers","type":"scatter3d","name":"3<br />large.st","marker":{"color":"rgba(141,160,203,1)","size":[55,55,55,55,55,55,55,55,55,55,55,55,55],"sizemode":"area","symbol":"circle-open","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)","size":55},"error_y":{"color":"rgba(141,160,203,1)","width":55},"error_x":{"color":"rgba(141,160,203,1)","width":55},"line":{"color":"rgba(141,160,203,1)","width":55},"frame":null},{"x":[0.00218469759273895,0.00286052782116195,0.00389917575690135,0.00695921088816592,0.0025981781479517,0.00305769702930188],"y":[0.000805372267457112,0.000335158082895766,0.000624390163485128,0.00217479664250418,0.000532641412447875,0.000906549037077544],"z":[3.25824879987836e-05,2.30481203137489e-05,4.39614636557185e-05,6.15736921211618e-05,2.45719943300744e-05,4.15848182145662e-05],"mode":"markers","type":"scatter3d","name":"3<br />medium.st","marker":{"color":"rgba(141,160,203,1)","size":[55,55,55,55,55,55],"sizemode":"area","symbol":"x","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)","size":55},"error_y":{"color":"rgba(141,160,203,1)","width":55},"error_x":{"color":"rgba(141,160,203,1)","width":55},"line":{"color":"rgba(141,160,203,1)","width":55},"frame":null},{"x":[0.00293447275536584,0.00130065717415115,0.00274866970082112,0.00656128768328179,0.00242545190845765],"y":[0.00084031676379555,0.000233952794193758,0.000524209071875709,0.00119178421847491,0.000526366612452168],"z":[1.32718358371699e-05,1.73019751333004e-05,3.26971453282635e-05,5.61121744714545e-05,2.74543736710663e-05],"mode":"markers","type":"scatter3d","name":"3<br />small.st","marker":{"color":"rgba(141,160,203,1)","size":[55,55,55,55,55],"sizemode":"area","symbol":"circle","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)","size":55},"error_y":{"color":"rgba(141,160,203,1)","width":55},"error_x":{"color":"rgba(141,160,203,1)","width":55},"line":{"color":"rgba(141,160,203,1)","width":55},"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>library(GGally) #install.packages(&quot;GGally&quot;) if it doesn&#39;t work
+ggpairs(final, columns=(21:23), aes(color=stsize, shape=cluster))</code></pre>
+<p><img src="/project1-1_files/figure-html/unnamed-chunk-7-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggpairs(final, columns=(13:15), aes(color=stsize, shape=cluster))</code></pre>
+<p><img src="/project1-1_files/figure-html/unnamed-chunk-7-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>plot(pam2,which=2)</code></pre>
+<p><img src="/project1-1_files/figure-html/unnamed-chunk-7-5.png" width="672" style="display: block; margin: auto;" />
+…</p>
+</div>
