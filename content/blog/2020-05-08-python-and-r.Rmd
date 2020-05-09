@@ -1,11 +1,14 @@
 ---
-title: Python and R
-author: Alexandra Sears
+title: "Python and R"
+author: "Alexandra Sears"
 date: '2020-05-08'
-slug: python-and-r
-categories: []
-tags: []
+output:
+  html_document:
+    df_print: paged
 description: ''
+slug: python-and-r
+tags: []
+categories: []
 ---
 Wow I have always wanted to use python but I have been learning so many helpful things in R! Why don't we use both with reticulate? I can use R to assign something.
 ```{R}
@@ -54,5 +57,5 @@ for c in counts:
     print(c, "appears", counts[c],"times")
 ```
 Wow it seems A is the most popular letter and J and Z are the least popular!
-![](/blog/2020-05-08-python-and-r_files/stateslinks_02.gif){width=80%}
-...
+![](/blog/stateslinks_02.gif){width=80%}
+
