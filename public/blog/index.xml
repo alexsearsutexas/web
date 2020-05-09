@@ -17,7 +17,7 @@
       <pubDate>Fri, 08 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/blog/python-and-r/</guid>
-      <description></description>
+      <description> library(reticulate) hi&amp;lt;-&amp;quot;Hello&amp;quot; hi=&amp;quot;world&amp;quot; print(r.hi,hi) ## (&amp;#39;Hello&amp;#39;, &amp;#39;world&amp;#39;) cat(c(hi,py$hi)) ## Hello world </description>
     </item>
     
   </channel>

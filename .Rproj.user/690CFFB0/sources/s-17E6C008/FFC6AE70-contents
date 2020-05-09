@@ -7,4 +7,16 @@ categories: []
 tags: []
 description: ''
 ---
+```{R}
+library(reticulate)
+hi<-"Hello"
+```
  
+```{python}
+hi="world"
+print(r.hi,hi)
+```
+
+```{R}
+cat(c(hi,py$hi))
+```

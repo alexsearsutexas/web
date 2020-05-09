@@ -10,4 +10,10 @@ description: ''
 
 
 
-
+<pre class="r"><code>library(reticulate)
+hi&lt;-&quot;Hello&quot;</code></pre>
+<pre class="python"><code>hi=&quot;world&quot;
+print(r.hi,hi)</code></pre>
+<pre><code>## (&#39;Hello&#39;, &#39;world&#39;)</code></pre>
+<pre class="r"><code>cat(c(hi,py$hi))</code></pre>
+<pre><code>## Hello world</code></pre>
