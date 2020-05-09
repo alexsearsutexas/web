@@ -3,9 +3,9 @@ title: "Python and R"
 author: "Alexandra Sears"
 date: '2020-05-08'
 output:
-  pdf_document: default
   html_document:
     df_print: paged
+  pdf_document: default
 description: ''
 slug: python-and-r
 tags: []
@@ -125,4 +125,4 @@ for c in counts:
 ## (&#39;x&#39;, &#39;appears&#39;, 2, &#39;times&#39;)
 ## (&#39;z&#39;, &#39;appears&#39;, 1, &#39;times&#39;)</code></pre>
 <p>Wow it seems A is the most popular letter and J and Z are the least popular!
-<img src="/blog/2020-05-08-python-and-r_files/x.png" alt="US Map" /></p>
+<img src="/blog/2020-05-08-python-and-r_files/Screen%20Shot%202020-05-09%20at%201.47.51%20PM.png" /></p>
