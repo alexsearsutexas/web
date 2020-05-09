@@ -72,13 +72,116 @@
               
 
 
+<p>Wow I have always wanted to use python but I have been learning so many helpful things in R! Why don’t we use both with reticulate? I can use R to assign something.</p>
 <pre class="r"><code>library(reticulate)
-hi&lt;-&quot;Hello&quot;</code></pre>
-<pre class="python"><code>hi=&quot;world&quot;
-print(r.hi,hi)</code></pre>
-<pre><code>## (&#39;Hello&#39;, &#39;world&#39;)</code></pre>
-<pre class="r"><code>cat(c(hi,py$hi))</code></pre>
-<pre><code>## Hello world</code></pre>
+begin&lt;-&quot;This stuff&quot;</code></pre>
+<p>Then I can use python to assign something else.</p>
+<pre class="python"><code>mid=&quot;isn&#39;t that hard&quot;
+print(r.begin,mid)</code></pre>
+<pre><code>## (&#39;This stuff&#39;, &quot;isn&#39;t that hard&quot;)</code></pre>
+<p>Then I can use both to print it out by referring back to R with “r.”. How cool! Can I refer back to python? I sure can.</p>
+<pre class="r"><code>end=&quot;when you do it a lot&quot;
+cat(c(begin,py$mid, end))</code></pre>
+<pre><code>## This stuff isn&#39;t that hard when you do it a lot</code></pre>
+<p>What else can I do with the combined power of two awesome softwares and very basic skills?</p>
+<p>Using one of my data sets from my project, “Exploratory Data Analysis”, I can convert all 50 states to a vector. I had to take out the average of all states, you will see why later.</p>
+<pre class="r"><code>library(knitr) 
+library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.2.1            ✓ purrr   0.3.3       
+## ✓ tibble  2.99.99.9014     ✓ dplyr   0.8.99.9000 
+## ✓ tidyr   1.0.2            ✓ stringr 1.4.0       
+## ✓ readr   1.3.1            ✓ forcats 0.4.0</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>ex&lt;-read_csv(&quot;week16_exercise.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   count = col_double(),
+##   state = col_character(),
+##   adults = col_double(),
+##   men = col_double(),
+##   women = col_double(),
+##   men_working = col_double(),
+##   women_working = col_double(),
+##   men_nonworking = col_double(),
+##   women_nonworking = col_double()
+## )</code></pre>
+<pre class="r"><code>glimpse(ex)</code></pre>
+<pre><code>## Rows: 52
+## Columns: 9
+## $ count            &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1…
+## $ state            &lt;chr&gt; &quot;All states (average)&quot;, &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizon…
+## $ adults           &lt;dbl&gt; 22, 19, 27, 26, 15, 24, 32, 24, 20, 30, 21, 20, 24, …
+## $ men              &lt;dbl&gt; 27, 24, 33, 29, 19, 28, 33, 28, 24, 40, 27, 27, 31, …
+## $ women            &lt;dbl&gt; 18, 14, 23, 23, 11, 19, 31, 21, 15, 22, 15, 14, 18, …
+## $ men_working      &lt;dbl&gt; 28, 25, 31, 31, 21, 29, 34, 29, 23, 40, 27, 29, 32, …
+## $ women_working    &lt;dbl&gt; 20, 15, 24, 26, 13, 21, 33, 24, 17, 24, 17, 15, 19, …
+## $ men_nonworking   &lt;dbl&gt; 21, 23, 33, 22, 14, 24, 26, 22, 25, 43, 25, 21, 25, …
+## $ women_nonworking &lt;dbl&gt; 14, 13, 17, 16, 9, 15, 27, 13, 11, 18, 12, 12, 14, 2…</code></pre>
+<pre class="r"><code>ex&lt;-ex%&gt;%mutate(col=state)%&gt;%select(col)
+ex&lt;-ex[-c(1), ]
+avector &lt;- as.vector(ex$col)
+avector</code></pre>
+<pre><code>##  [1] &quot;Alabama&quot;              &quot;Alaska&quot;               &quot;Arizona&quot;             
+##  [4] &quot;Arkansas&quot;             &quot;California&quot;           &quot;Colorado&quot;            
+##  [7] &quot;Connecticut&quot;          &quot;Delaware&quot;             &quot;District of Columbia&quot;
+## [10] &quot;Florida&quot;              &quot;Georgia&quot;              &quot;Hawaii&quot;              
+## [13] &quot;Idaho&quot;                &quot;Illinois&quot;             &quot;Indiana&quot;             
+## [16] &quot;Iowa&quot;                 &quot;Kansas&quot;               &quot;Kentucky&quot;            
+## [19] &quot;Louisiana&quot;            &quot;Maine&quot;                &quot;Maryland&quot;            
+## [22] &quot;Massachusetts&quot;        &quot;Michigan&quot;             &quot;Minnesota&quot;           
+## [25] &quot;Mississippi&quot;          &quot;Missouri&quot;             &quot;Montana&quot;             
+## [28] &quot;Nebraska&quot;             &quot;Nevada&quot;               &quot;New Hampshire&quot;       
+## [31] &quot;New Jersey&quot;           &quot;New Mexico&quot;           &quot;New York&quot;            
+## [34] &quot;North Carolina&quot;       &quot;North Dakota&quot;         &quot;Ohio&quot;                
+## [37] &quot;Oklahoma&quot;             &quot;Oregon&quot;               &quot;Pennsylvania&quot;        
+## [40] &quot;Rhode Island&quot;         &quot;South Carolina&quot;       &quot;South Dakota&quot;        
+## [43] &quot;Tennessee&quot;            &quot;Texas&quot;                &quot;Utah&quot;                
+## [46] &quot;Vermont&quot;              &quot;Virginia&quot;             &quot;Washington&quot;          
+## [49] &quot;West Virginia&quot;        &quot;Wisconsin&quot;            &quot;Wyoming&quot;</code></pre>
+<p>But what if I want it in python? I can do that! And I can convert from a list to a string to do something very cool!</p>
+<pre class="python"><code>df=r.avector
+df=&#39; &#39;.join(df)
+df=df.lower()</code></pre>
+<p>Then I use what I learned in my Bioinformatics class and I can count the number of times each letter in the alphabet shows up in the names of all 50 states.</p>
+<pre class="python"><code>counts = {}            
+for c in df:     
+    if c in counts:    
+        counts[c]+=1   
+    else:
+        counts[c]=1    
+for c in counts:
+    print(c, &quot;appears&quot;, counts[c],&quot;times&quot;)</code></pre>
+<pre><code>## (&#39; &#39;, &#39;appears&#39;, 62, &#39;times&#39;)
+## (&#39;a&#39;, &#39;appears&#39;, 62, &#39;times&#39;)
+## (&#39;c&#39;, &#39;appears&#39;, 14, &#39;times&#39;)
+## (&#39;b&#39;, &#39;appears&#39;, 3, &#39;times&#39;)
+## (&#39;e&#39;, &#39;appears&#39;, 28, &#39;times&#39;)
+## (&#39;d&#39;, &#39;appears&#39;, 12, &#39;times&#39;)
+## (&#39;g&#39;, &#39;appears&#39;, 8, &#39;times&#39;)
+## (&#39;f&#39;, &#39;appears&#39;, 3, &#39;times&#39;)
+## (&#39;i&#39;, &#39;appears&#39;, 47, &#39;times&#39;)
+## (&#39;h&#39;, &#39;appears&#39;, 15, &#39;times&#39;)
+## (&#39;k&#39;, &#39;appears&#39;, 10, &#39;times&#39;)
+## (&#39;j&#39;, &#39;appears&#39;, 1, &#39;times&#39;)
+## (&#39;m&#39;, &#39;appears&#39;, 15, &#39;times&#39;)
+## (&#39;l&#39;, &#39;appears&#39;, 16, &#39;times&#39;)
+## (&#39;o&#39;, &#39;appears&#39;, 38, &#39;times&#39;)
+## (&#39;n&#39;, &#39;appears&#39;, 43, &#39;times&#39;)
+## (&#39;p&#39;, &#39;appears&#39;, 4, &#39;times&#39;)
+## (&#39;s&#39;, &#39;appears&#39;, 33, &#39;times&#39;)
+## (&#39;r&#39;, &#39;appears&#39;, 23, &#39;times&#39;)
+## (&#39;u&#39;, &#39;appears&#39;, 9, &#39;times&#39;)
+## (&#39;t&#39;, &#39;appears&#39;, 21, &#39;times&#39;)
+## (&#39;w&#39;, &#39;appears&#39;, 11, &#39;times&#39;)
+## (&#39;v&#39;, &#39;appears&#39;, 5, &#39;times&#39;)
+## (&#39;y&#39;, &#39;appears&#39;, 6, &#39;times&#39;)
+## (&#39;x&#39;, &#39;appears&#39;, 2, &#39;times&#39;)
+## (&#39;z&#39;, &#39;appears&#39;, 1, &#39;times&#39;)</code></pre>
+<p>Wow it seems A is the most popular letter and J and Z are the least popular!
+…</p>
 
               <hr>
               <div class="related-posts">

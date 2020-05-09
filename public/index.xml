@@ -17,7 +17,9 @@
       <pubDate>Fri, 08 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/blog/python-and-r/</guid>
-      <description> library(reticulate) hi&amp;lt;-&amp;quot;Hello&amp;quot; hi=&amp;quot;world&amp;quot; print(r.hi,hi) ## (&amp;#39;Hello&amp;#39;, &amp;#39;world&amp;#39;) cat(c(hi,py$hi)) ## Hello world </description>
+      <description>Wow I have always wanted to use python but I have been learning so many helpful things in R! Why don’t we use both with reticulate? I can use R to assign something.
+library(reticulate) begin&amp;lt;-&amp;quot;This stuff&amp;quot; Then I can use python to assign something else.
+mid=&amp;quot;isn&amp;#39;t that hard&amp;quot; print(r.begin,mid) ## (&amp;#39;This stuff&amp;#39;, &amp;quot;isn&amp;#39;t that hard&amp;quot;) Then I can use both to print it out by referring back to R with “r.</description>
     </item>
     
     <item>

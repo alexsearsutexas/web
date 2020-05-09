@@ -1,0 +1,3 @@
+"0","df=r.avector
+df=' '.join(df)
+df=df.lower()"

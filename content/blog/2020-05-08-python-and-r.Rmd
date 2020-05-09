@@ -7,16 +7,50 @@ categories: []
 tags: []
 description: ''
 ---
+Wow I have always wanted to use python but I have been learning so many helpful things in R! Why don't we use both with reticulate? I can use R to assign something.
 ```{R}
 library(reticulate)
-hi<-"Hello"
+begin<-"This stuff"
 ```
- 
+Then I can use python to assign something else.
 ```{python}
-hi="world"
-print(r.hi,hi)
+mid="isn't that hard"
+print(r.begin,mid)
 ```
-
+Then I can use both to print it out by referring back to R with "r.". How cool! Can I refer back to python? I sure can.
 ```{R}
-cat(c(hi,py$hi))
+end="when you do it a lot"
+cat(c(begin,py$mid, end))
 ```
+What else can I do with the combined power of two awesome softwares and very basic skills?
+
+Using one of my data sets from my project, "Exploratory Data Analysis", I can convert all 50 states to a vector. I had to take out the average of all states, you will see why later.
+```{R}
+library(knitr) 
+library(tidyverse)
+ex<-read_csv("week16_exercise.csv")
+glimpse(ex)
+ex<-ex%>%mutate(col=state)%>%select(col)
+ex<-ex[-c(1), ]
+avector <- as.vector(ex$col)
+avector
+```
+But what if I want it in python? I can do that! And I can convert from a list to a string to do something very cool!
+```{python}
+df=r.avector
+df=' '.join(df)
+df=df.lower()
+```
+Then I use what I learned in my Bioinformatics class and I can count the number of times each letter in the alphabet shows up in the names of all 50 states.
+```{python}
+counts = {}            
+for c in df:     
+    if c in counts:    
+        counts[c]+=1   
+    else:
+        counts[c]=1    
+for c in counts:
+    print(c, "appears", counts[c],"times")
+```
+Wow it seems A is the most popular letter and J and Z are the least popular!
+...

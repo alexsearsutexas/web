@@ -1,0 +1,206 @@
+---
+title: 'Project 1: Exploratory Data Analysis'
+author: "Alexandra Sears"
+date: "2020-03-15"
+output:
+  pdf_document:
+    toc: no
+  html_document:
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, fig.align = "center", warning = F, message = F,
+tidy=TRUE, tidy.opts=list(width.cutoff=60), R.options=list(max.print=100))
+library(knitr) 
+library(tidyverse)
+```
+
+```{r}
+exercise2015<-read_csv("week16_exercise.csv")
+crime2015<-read_csv("table5.csv")
+#data sets
+library(ggplot2)
+crime2015 <- na.omit(crime2015) 
+glimpse(crime2015)
+exercise2015<- exercise2015
+glimpse(exercise2015)
+```
+#### Introduction
+
+*I got one data set from the FBI website on violent crimes by state, https://ucr.fbi.gov/crime-in-the-u.s/2015/crime-in-the-u.s.-2015/tables/table-5. It contains population per state and total violent crimes, but also splits violent crimes into murder, rape, robbery, etc. I got the other from https://github.com/rfordatascience/tidytuesday/blob/master/data/2018/2018-07-17/week16_exercise.xlsx, which is originally from the National Health Statistics Reports by the CDC. This data set has the percentage of adults 18-64 that exercise the recommended daily amount. It has this split into male and female and employed and unemployed. I chose the first data set because I did my biostatistics project on poulation and crime and I wanted to further explore that. I chose the second data set because I know that exercise releases chemicals that improve your mood and I wanted to know if states that had more people exercising had less crime. I am connecting the data sets by state. I collected data from crime in 2015 because that is the year the exercise data was from and I named the FBI crime one crime2015 and the CDC exercise one exercise 2015. I expect to see that states with higher individuals that work out will have less violent crimes. I also expect the states with more active unemployed adults may also have less robbery and burglaries assuming most robberies are done by people without steady income. *
+
+#### Joining/Merging 
+```{R}
+crime2015<-crime2015%>%rename(state=State)%>%mutate(state=recode(state,"West Virgina"="West Virginia"))
+both<- inner_join(crime2015, exercise2015, by="state")
+both<-both%>%select(-count)
+glimpse(both)
+```
+*I had to rename State to state match the case in exercise2015 and I had to fix the spelling mistake in West Virginia. I chose innerjoin because crime2015 included Puerto Rico and exercise2015 had a total of the country and crime2015 did not have crime totals. I was not interested in the nation total so this was not a problem.*
+
+#### Wrangling 
+
+```{r}
+library(knitr)
+library(kableExtra)
+
+both %>% filter(Population>=6000000)
+both %>% arrange(desc(Violent_crime))
+both%>% select(Population, Violent_crime)
+both %>% mutate(violcrimebypop=(Violent_crime/Population))%>%select(state, violcrimebypop)
+
+#to seperate state size into 3 categorical variabels, small, medium, and large
+pop_vec<- both %>% pull(Population)
+stsize<- cut( pop_vec,
+  breaks = c( 1, 2500000, 6000000, Inf),
+  labels = c("small.st", "medium.st", "large.st"),
+  right  = FALSE)
+
+both%>%mutate(stsize=stsize)%>%group_by(stsize)%>%summarize_all(n_distinct)
+both<-both%>%mutate(stsize=stsize)
+```
+*Because the amount of violent crime is not standardized by population of the state I wanted to look at how population affects rate ofcrime. I then used mutate to normalize that vaulue by population. I could not find a data set with a categorical value other than state so I made one by designating states as small, medium and large so I could see if the correlation by state size might have changed. I did this by creating 3 almost equivalent groups.*
+```{r}
+both %>%summarize(ndistst=n_distinct(state), n())
+
+both %>%group_by(stsize)%>%summarize(ndistst=n_distinct(stsize), n())
+
+#normalize the crime by population of the state
+both<-both %>% mutate(violcrimebypop=(Violent_crime/Population),
+                   murbypop=(Murder_manslaughter/Population),
+                   robbypop=( Robbery /Population))
+
+viol<-both%>%summarise(sdviol=sd(violcrimebypop), meanviol=mean(violcrimebypop), varviol=var(violcrimebypop), maxviol=max(violcrimebypop), minviol=min(violcrimebypop), quanviol=quantile(violcrimebypop, .75), corviol=cor(violcrimebypop, adults))
+
+violbysize<-both%>%group_by(stsize)%>%summarise(sdviol=sd(violcrimebypop), meanviol=mean(violcrimebypop), varviol=var(violcrimebypop), maxviol=max(violcrimebypop), minviol=min(violcrimebypop), quanviol=quantile(violcrimebypop, .75), corviol=cor(violcrimebypop, adults))
+
+mur<-both%>%summarise(sdmur=sd(murbypop), meanmur=mean(murbypop), varmur=var(murbypop), maxmur=max(murbypop), minmur=min(murbypop), quanmur=quantile(murbypop, .75), cormur=cor(murbypop, adults))
+
+murbysize<-both%>%group_by(stsize)%>%summarise(sdmur=sd(murbypop), meanmur=mean(murbypop), varmur=var(murbypop), maxmur=max(murbypop), minmur=min(murbypop), quanmur=quantile(murbypop, .75), cormur=cor(murbypop, adults))
+
+rob<-both%>%summarise(sdrob=sd(robbypop), meanrob=mean(robbypop), varrob=var(robbypop), maxrob=max(robbypop), minrob=min(robbypop), quanrob=quantile(robbypop, .75), corrob=cor(robbypop, adults))
+
+robbysize<-both%>%group_by(stsize)%>%summarise(sdrob=sd(robbypop), meanrob=mean(robbypop), varrob=var(robbypop), maxrob=max(robbypop), minrob=min(robbypop), quanrob=quantile(robbypop, .75), corrob=cor(robbypop, adults))
+
+adults<-both%>%summarise(sdadults=sd(adults), meanadults=mean(adults), varadults=var(adults), maxadults=max(adults), minadults=min(adults), quanadults=quantile(adults, .75), coradults=cor(adults, murbypop))
+
+adultssize<-both%>%group_by(stsize)%>%summarise(sdadults=sd(adults), meanadults=mean(adults), varadults=var(adults), maxadults=max(adults), minadults=min(adults), quanadults=quantile(adults, .75), coradults=cor(adults, murbypop))
+
+men<-both%>%summarise(sdmen=sd(men), meanmen=mean(men), varmen=var(men), maxmen=max(men), minmen=min(men), quanmen=quantile(men, .75), cormen=cor(men, murbypop))
+
+mensize<-both%>%group_by(stsize)%>%summarise(sdmen=sd(men), meanmen=mean(men), varmen=var(men), maxmen=max(men), minmen=min(men), quanmen=quantile(men, .75), cormen=cor(men, murbypop))
+
+women<-both%>%summarise(sdwomen=sd(women), meanwomen=mean(women), varwomen=var(women), maxwomen=max(women), minwomen=min(women), quanmen=quantile(women, .75), cormen=cor(women, murbypop))
+
+womensize<-both%>%group_by(stsize)%>%summarise(sdwomen=sd(women), meanwomen=mean(women), varwomen=var(women), maxwomen=max(women), minwomen=min(women), quanmen=quantile(women, .75), cormen=cor(women, murbypop))
+
+normboth<-both%>%select(violcrimebypop,murbypop,robbypop,adults,men,women)%>%na.omit
+cor(normboth)
+
+kable(viol) %>%
+  kable_styling(bootstrap_options = c("striped", "hover","condensed"))
+kable(violbysize) %>%
+  kable_styling(bootstrap_options = c("striped", "hover","condensed"))
+kable(mur) %>%
+  kable_styling(bootstrap_options = c("striped", "hover","condensed"))
+kable(murbysize) %>%
+  kable_styling(bootstrap_options = c("striped", "hover","condensed"))
+kable(rob) %>%
+  kable_styling(bootstrap_options = c("striped", "hover","condensed"))
+kable(robbysize) %>%
+  kable_styling(bootstrap_options = c("striped", "hover","condensed"))
+kable(adults) %>%
+  kable_styling(bootstrap_options = c("striped", "hover","condensed"))
+kable(adultssize) %>%
+  kable_styling(bootstrap_options = c("striped", "hover","condensed"))
+kable(men) %>%
+  kable_styling(bootstrap_options = c("striped", "hover","condensed"))
+kable(mensize) %>%
+  kable_styling(bootstrap_options = c("striped", "hover","condensed"))
+kable(women) %>%
+  kable_styling(bootstrap_options = c("striped", "hover","condensed"))
+kable(womensize) %>%
+  kable_styling(bootstrap_options = c("striped", "hover","condensed"))
+```
+
+#### Tidying: Rearranging Wide/Long
+```{r}
+both1<-both%>%pivot_wider(names_from="stsize", values_from="Population")
+both1 %>% pivot_longer(cols=c("medium.st","small.st","large.st"),names_to="stsize",values_to="Population")%>%na.omit()
+```
+
+#### Visualizing
+
+```{r}
+library(ggplot2) 
+
+normboth%>%select_if(is.numeric)%>%cor%>%as.data.frame%>%
+rownames_to_column%>%pivot_longer(-1)%>%
+ggplot(aes(rowname,name,fill=value))+geom_tile()+
+geom_text(aes(label=round(value,2)))+
+xlab("")+ylab("")+ scale_fill_gradient2(low="yellow", high="red")
+
+ggplot(data = both, aes(x = men , y =robbypop,color=stsize))+geom_point()+theme_light()+
+  ggtitle("Violent Crime and Daily Exercise") + ylab("Violent Crime by Population") + xlab("Percent of Adults that Exercise")+facet_wrap(~stsize)
+
+#ggplot(data = both, aes(x = women, fill=stsize))+geom_histogram(bins=50)+theme_bw()+
+  #ggtitle("Recommended Daily Exercise by Adult") + xlab("Percent of Adults that Exercise")+
+ # theme(legend.position=c(.8,.7))+geom_errorbar(stat="summary")
+
+ggplot(data = both, aes(x = women,fill=stsize))+geom_density(alpha=.75)+theme_bw()+
+  ggtitle("Recommended Daily Exercise by Adult") + xlab("Percent of Adults that Exercise")+
+  theme(legend.position=c(.8,.7))+geom_rug()
+
+ggplot(both, aes(x=adults, y=violcrimebypop, group=stsize))+geom_boxplot()+geom_jitter(alpha=.5)
+
+library(ggplot2)
+#library(ggExtra)
+p1<-ggplot(both, aes(x = violcrimebypop , y =women))+geom_point()
+#ggMarginal(p1,type = 'histogram')
+
+ggplot(both, aes(x = stsize))+
+geom_bar(aes(y=adults), stat="summary", fun.y="mean")
+
+
+
+```
+#### Dimensionality Reduction 
+```{r}
+library(cluster)
+
+pam_dat<-both%>%select(robbypop,murbypop,violcrimebypop,adults,men,women)
+sil_width<-vector()
+for(i in 2:10){
+pam_fit <- pam(pam_dat, k = i)
+sil_width[i] <- pam_fit$silinfo$avg.width}
+ggplot()+geom_line(aes(x=1:10,y=sil_width))+scale_x_continuous(name="k",breaks=1:10)
+
+pam2<-both%>%select(robbypop,murbypop,violcrimebypop,adults,men,women)%>%pam(3)
+
+final<-both%>%mutate(cluster=as.factor(pam2$clustering))
+confmat<-final%>%group_by(stsize)%>%count(cluster)%>%arrange(desc(n))%>%
+pivot_wider(names_from="cluster",values_from="n",values_fill = list('n'=0))
+confmat
+
+round(sum(diag(as.matrix(confmat[,2:4])))/sum(confmat[,2:4]),4)
+
+library(plotly)
+final %>% plot_ly(x= ~violcrimebypop, y = ~robbypop, z = ~murbypop,  color =  ~cluster, 
+    type =  "scatter3d",  mode =  "markers",  symbol =  ~stsize,  symbols =  c('circle', 'x', 'o'),size = .4)
+
+library(GGally) #install.packages("GGally") if it doesn't work
+ggpairs(final, columns=(21:23), aes(color=stsize, shape=cluster))
+ggpairs(final, columns=(13:15), aes(color=stsize, shape=cluster))
+
+plot(pam2,which=2)
+```
+...
+
+
+
+
+
