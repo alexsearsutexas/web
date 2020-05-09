@@ -60,5 +60,5 @@ for c in counts:
 Wow it seems A is the most popular letter and J and Z are the least popular!
 ![](/static/img/usmap.png)
 ![](/blog/2020-05-08-python-and-r_files/usmap.png)
-<img src="usmap.png" width="800" />
+<img src="usmap.png" width="800"/>
 

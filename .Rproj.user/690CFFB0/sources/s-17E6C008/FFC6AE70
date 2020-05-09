@@ -5,14 +5,14 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "2292020722",
+    "hash" : "1692945938",
     "id" : "FFC6AE70",
-    "lastKnownWriteTime" : 1589052165,
-    "last_content_update" : 1589052165031,
+    "lastKnownWriteTime" : 1589052231,
+    "last_content_update" : 1589052231446,
     "path" : "~/Desktop/web/content/blog/2020-05-08-python-and-r.Rmd",
     "project_path" : "content/blog/2020-05-08-python-and-r.Rmd",
     "properties" : {
-        "cursorPosition" : "62,15",
+        "cursorPosition" : "62,32",
         "scrollLine" : "59"
     },
     "read_only" : false,
