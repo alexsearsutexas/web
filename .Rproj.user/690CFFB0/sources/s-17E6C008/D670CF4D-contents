@@ -1,38 +1,45 @@
 ---
 title: 'Alexandra Sears alexsears@utexas.edu '
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## About 
+### About 
 
 *Alexandra Sears is a graduating senior at the University of Texas. Soon she will have a Bachelor of Science and Arts in Biology and a commission as a second lieutenant in the United States Air Force. She currently is employed by the university as a lifeguard at the Texas Swimming Center. After graduation she will be an Aircraft Maintenance Officer and will be moving to Japan*
 
-##  Experience
-#Lifeguard/Swim Instructor, Texas Swimming Center May 2018- present
+###  Experience
+Lifeguard/Swim Instructor, Texas Swimming Center May 2018- present
+
 Maintained constant surveillance of patrons in the facility; took immediate and appropriate action to secure safety of patrons in the event of emergency. Provide emergency care and treatment to patrons in need until the arrival of emergency medical services. Ensure orderly and sanitary swimming conditions by organizing and disinfecting public areas. 
-#General Military Course Advisor, AFROTC Detachment 825 January 2018-May 2018
+
+General Military Course Advisor, AFROTC Detachment 825 January 2018-May 2018
+
 Supervised 40 cadets; Ran biweekly meetings for cadet development. Participated in weekly Wing Staff meetings to coordinate the Cadet Wing. Planned and executed New Cadet Orientation
-#Mission Support Group Commander, AFROTC Detachment 825 January 2020-present
+
+Mission Support Group Commander, AFROTC Detachment 825 January 2020-present
+
 Supervised an entire group in the cadet week; Participated in weekly Wing Staff meetings to coordinate the Cadet Wing. Oversaw all special events, recruiting, and public affairs for the Detachment.
 
-##  Education
+###  Education
+Thornton High School, International Baccalaureate Diploma Aug 2012- May 2016 
 
-#Thornton High School, International Baccalaureate Diploma Aug 2012- May 2016 
-#University of Texas at Austin, Biology BSA Aug 2016- May 2020
+University of Texas at Austin, Biology BSA Aug 2016- May 2020
 
 
-##  Interests
-#Air Force
-#Biology/Physiology
+###  Interests
+Air Force
 
-##  Accomplishments
-#John E. Simpson Award- Det 825 Recipient 2020
-#Top 5% of Cadet Wing 2020
+Biology/Physiology
+
+###  Accomplishments
+John E. Simpson Award- Det 825 Recipient 2020
+
+Top 5% of Cadet Wing 2020
 
 ...

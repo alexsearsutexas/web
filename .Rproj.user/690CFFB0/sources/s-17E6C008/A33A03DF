@@ -1,25 +1,25 @@
 {
     "collab_server" : "",
     "contents" : "",
-    "created" : 1588990657518.000,
+    "created" : 1588991418639.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
     "hash" : "0",
-    "id" : "42C0716B",
+    "id" : "A33A03DF",
     "lastKnownWriteTime" : 1588991879,
     "last_content_update" : 1588991879,
-    "path" : "~/Desktop/web/public/index.xml",
-    "project_path" : "public/index.xml",
+    "path" : "~/Desktop/web/public/blog/python-and-r/index.html",
+    "project_path" : "public/blog/python-and-r/index.html",
     "properties" : {
-        "cursorPosition" : "23,48",
+        "cursorPosition" : "0,0",
         "scrollLine" : "0"
     },
     "read_only" : false,
     "read_only_alternatives" : [
     ],
-    "relative_order" : 7,
+    "relative_order" : 9,
     "source_on_save" : false,
     "source_window" : "",
-    "type" : "xml"
+    "type" : "html"
 }

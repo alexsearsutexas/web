@@ -1,13 +1,11 @@
 ---
 title: 'Alexandra Sears alexsears@utexas.edu '
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 
 ### About 
 
