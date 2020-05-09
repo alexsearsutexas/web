@@ -1,0 +1,8 @@
+getwd()
+install.packages("blogdown")
+blogdown::install_hugo()
+blogdown::new_site(theme="nurlansu/hugo-sustain")
+install.packages(c("ggpubr", "glmnet", "plotROC", "pROC"))
+install.packages("mvtnorm")
+blogdown::serve_site()
+blogdown::build_site()
