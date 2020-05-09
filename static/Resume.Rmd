@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### About 
 
-*Alexandra Sears is a graduating senior at the University of Texas. Soon she will have a Bachelor of Science and Arts in Biology and a commission as a second lieutenant in the United States Air Force. She currently is employed by the university as a lifeguard at the Texas Swimming Center. After graduation she will be an Aircraft Maintenance Officer and will be moving to Japan*
+*Alexandra Sears is a graduating senior at the University of Texas. Soon she will have a Bachelor of Science and Arts in Biology and a commission as a second lieutenant in the United States Air Force. She currently is employed by the university as a lifeguard at the Texas Swimming Center. After graduation she will be an Aircraft Maintenance Officer and will be moving to Japan.*
 
 ###  Experience
 Lifeguard/Swim Instructor, Texas Swimming Center May 2018- present
