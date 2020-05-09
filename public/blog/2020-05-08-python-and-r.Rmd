@@ -57,5 +57,5 @@ for c in counts:
     print(c, "appears", counts[c],"times")
 ```
 Wow it seems A is the most popular letter and J and Z are the least popular!
-![](/blog/stateslinks_02.gif){width=80%}
+<img src="usmap.png">
 
